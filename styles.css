@@ -2,20 +2,23 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f0f2f5;
   margin: 0;
-  padding: 40px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100vh;
+}
+
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .container {
   background: white;
-  padding: 30px 40px;
-  border-radius: 12px;
+  padding: 20px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  max-width: 700px;
-  width: 100%;
+  width: 250px;
   text-align: center;
+  overflow-y: auto;
 }
 
 h1 {
@@ -25,9 +28,8 @@ h1 {
 
 .chatbot-menu {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .chatbot-button {
@@ -51,6 +53,15 @@ h1 {
   background-color: #357ABD;
 }
 
+.chatbot-button.active {
+  background-color: #357ABD;
+}
+
 .chatbot-button span.emoji {
   font-size: 24px;
+}
+
+.chatbot-frame {
+  flex: 1;
+  border: none;
 }
