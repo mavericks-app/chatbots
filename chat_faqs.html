@@ -101,6 +101,12 @@
       const HISTORY_PREFIX = "inmovillaChat_";
       const THEME_KEY = "inmovillaTheme";
 
+      function generateUserId() {
+        const arr = new Uint8Array(16);
+        crypto.getRandomValues(arr);
+        return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
+      }
+
       /******************** 3. DOM REFS ************************/
       const chatBox = document.getElementById("chat");
       const textarea = document.getElementById("message");
@@ -150,7 +156,7 @@
       function ensureAtLeastOneUser() {
         let users = loadUsers();
         if (!users.length) {
-          users = [{ id: 1, name: "Usuario 1" }];
+          users = [{ id: generateUserId(), name: "Usuario 1" }];
           saveUsers(users);
         }
       }
@@ -161,7 +167,7 @@
         users.forEach((u) => {
           const opt = document.createElement("option");
           opt.value = u.id;
-          opt.textContent = `${u.name} (#${u.id})`;
+          opt.textContent = `${u.name} (#${String(u.id).slice(0, 8)})`;
           userSelect.appendChild(opt);
         });
         const nOpt = document.createElement("option");
@@ -186,20 +192,20 @@
             return;
           }
           const users = loadUsers();
-          const newId = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1;
+          const newId = generateUserId();
           users.push({ id: newId, name });
           saveUsers(users);
           renderUserOptions();
           userSelect.value = newId;
           id = newId;
         }
-        loadHistoryIntoChat(+id);
+        loadHistoryIntoChat(id);
         resetConversationState();
         disableUserButtons(false);
       }
 
       renameBtn.addEventListener("click", () => {
-        const currentId = +userSelect.value;
+        const currentId = userSelect.value;
         const users = loadUsers();
         const idx = users.findIndex((u) => u.id === currentId);
         if (idx === -1) return;
@@ -212,7 +218,7 @@
       });
 
       deleteBtn.addEventListener("click", () => {
-        const currentId = +userSelect.value;
+        const currentId = userSelect.value;
         if (!confirm("¿Eliminar usuario y su historial?")) return;
         let users = loadUsers().filter((u) => u.id !== currentId);
         saveUsers(users);
@@ -220,7 +226,7 @@
         ensureAtLeastOneUser();
         renderUserOptions();
         userSelect.value = loadUsers()[0].id;
-        loadHistoryIntoChat(+userSelect.value);
+        loadHistoryIntoChat(userSelect.value);
         resetConversationState();
       });
 
@@ -282,7 +288,7 @@ d.toLocaleTimeString("es-ES", {
         chatBox.scrollTop = chatBox.scrollHeight;
 
         if (save) {
-          const userId = +userSelect.value;
+          const userId = userSelect.value;
           const hist = loadHistory(userId);
           hist.push({ text, from, ts: date.getTime() });
           saveHistory(userId, hist);
@@ -396,7 +402,7 @@ d.toLocaleTimeString("es-ES", {
 
       resetBtn.addEventListener("click", () => {
         if (!confirm("¿Vaciar la conversación de este usuario?")) return;
-        const userId = +userSelect.value;
+        const userId = userSelect.value;
         saveHistory(userId, []);
         chatBox.innerHTML = "";
         resetConversationState();
@@ -409,7 +415,7 @@ d.toLocaleTimeString("es-ES", {
         renderUserOptions();
         userSelect.value = loadUsers()[0].id;
         disableUserButtons(false);
-        loadHistoryIntoChat(+userSelect.value);
+        loadHistoryIntoChat(userSelect.value);
         textarea.focus();
       }
 
