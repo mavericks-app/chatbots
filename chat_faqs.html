@@ -271,11 +271,35 @@ d.toLocaleTimeString("es-ES", {
 
       }
 
+      function appendTextOrImages(el, text) {
+        const regex = /(https?:\/\/\S+\.(?:png|jpe?g|gif|webp))/gi;
+        let last = 0;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          if (match.index > last) {
+            el.appendChild(document.createTextNode(text.slice(last, match.index)));
+          }
+          const url = match[0];
+          const a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank";
+          const img = document.createElement("img");
+          img.src = url;
+          img.className = "inline-block max-w-xs rounded-lg cursor-pointer";
+          a.appendChild(img);
+          el.appendChild(a);
+          last = match.index + url.length;
+        }
+        if (last < text.length) {
+          el.appendChild(document.createTextNode(text.slice(last)));
+        }
+      }
+
       function addMessage(text, from = "user", date = new Date(), save = true) {
         const bubble = document.createElement("div");
         const alignRight = from === "user";
         bubble.className = `${alignRight ? "self-end bg-green-600 text-white" : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap`;
-        bubble.textContent = text;
+        appendTextOrImages(bubble, text);
 
         const wrapper = document.createElement("div");
         wrapper.className = "flex flex-col" + (alignRight ? " items-end" : " items-start");
