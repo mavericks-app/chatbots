@@ -271,7 +271,7 @@ d.toLocaleTimeString("es-ES", {
       }
 
       function appendTextOrImages(el, text) {
-        const regex = /(https?:\/\/\S+\.(?:png|jpe?g|gif|webp))/gi;
+        const regex = /(https?:\/\/academy\.inmovilla\.com\/\S+)|(https?:\/\/\S+\.(?:png|jpe?g|gif|webp))/gi;
         let last = 0;
         let match;
         while ((match = regex.exec(text)) !== null) {
@@ -279,14 +279,23 @@ d.toLocaleTimeString("es-ES", {
             el.appendChild(document.createTextNode(text.slice(last, match.index)));
           }
           const url = match[0];
-          const a = document.createElement("a");
-          a.href = url;
-          a.target = "_blank";
-          const img = document.createElement("img");
-          img.src = url;
-          img.className = "inline-block max-w-xs rounded-lg cursor-pointer";
-          a.appendChild(img);
-          el.appendChild(a);
+          if (match[1]) {
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.className = "text-blue-500 underline";
+            a.textContent = url;
+            el.appendChild(a);
+          } else {
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            const img = document.createElement("img");
+            img.src = url;
+            img.className = "inline-block max-w-xs rounded-lg cursor-pointer";
+            a.appendChild(img);
+            el.appendChild(a);
+          }
           last = match.index + url.length;
         }
         if (last < text.length) {
