@@ -291,6 +291,7 @@ d.toLocaleTimeString("es-ES", {
             const a = document.createElement("a");
             a.href = url;
             a.target = "_blank";
+            a.rel = "noopener noreferrer";
             const img = document.createElement("img");
             img.src = url;
             img.className = "inline-block max-w-xs rounded-lg cursor-pointer";
