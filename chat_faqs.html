@@ -407,7 +407,7 @@ d.toLocaleTimeString("es-ES", {
       function openFaqModal(bubble) {
         currentBubble = bubble;
         faqAnswer.value = bubble.dataset.raw || bubble.textContent;
-        const prev = findPreviousBotText(bubble.parentElement);
+        const prev = findPreviousOtherText(bubble.parentElement, bubble.dataset.from);
         faqQuestion.value = prev || "";
         faqModal.classList.remove("hidden");
       }
@@ -417,11 +417,13 @@ d.toLocaleTimeString("es-ES", {
         currentBubble = null;
       }
 
-      function findPreviousBotText(wrapper) {
+      function findPreviousOtherText(wrapper, from) {
         let el = wrapper.previousElementSibling;
         while (el) {
           const b = el.querySelector("div");
-          if (b && b.dataset.from === "bot") return b.dataset.raw || b.textContent;
+          if (b && b.dataset.from && b.dataset.from !== from) {
+            return b.dataset.raw || b.textContent;
+          }
           el = el.previousElementSibling;
         }
         return "";
