@@ -97,9 +97,10 @@
       let ENDPOINT_URL = PROD_ENDPOINT; // cambia a TEST_ENDPOINT si lo necesitas
 
       /******************** 2. STORAGE KEYS ************************/
-      const USERS_KEY = "inmovillaUsers";
-      const HISTORY_PREFIX = "inmovillaChat_";
-      const THEME_KEY = "inmovillaTheme";
+      // Mantener usuarios independientes de otros chatbots
+      const USERS_KEY = "compradorUsers";
+      const HISTORY_PREFIX = "compradorChat_";
+      const THEME_KEY = "compradorTheme";
 
       function generateUserId() {
         const arr = new Uint8Array(16);
