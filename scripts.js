@@ -1,11 +1,9 @@
 const chatbots = [
-  { name: "Agente Comprador", url: "chat_comprador.html", icon: "🏠" },
   { name: "Chatbot FAQs", url: "chat_faqs.html", icon: "❓" },
-  { name: "Chatbot de Ventas", url: "https://ejemplo.com/chatbot-ventas", icon: "🛒" },
-  { name: "Chatbot de Soporte", url: "https://ejemplo.com/chatbot-soporte", icon: "🛠️" },
-  { name: "Chatbot de Finanzas", url: "https://ejemplo.com/chatbot-finanzas", icon: "💰" },
-  { name: "Chatbot de RRHH", url: "https://ejemplo.com/chatbot-rrhh", icon: "👥" },
-  { name: "Chatbot Legal", url: "https://ejemplo.com/chatbot-legal", icon: "⚖️" }
+  { name: "Agente para Comprador", url: "chat_comprador.html", icon: "🏠" },
+  { name: "Agente para Vendedor", url: "#", icon: "🛒" },
+  { name: "Chatbot de Soporte", url: "#", icon: "🛠️" },
+  { name: "Chatbot de Facturación", url: "#", icon: "💰" }
 ];
 
 function loadChatbotMenu() {
