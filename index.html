@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menú de Chatbots</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .chatbot-menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .chatbot-button {
+      background-color: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 15px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .chatbot-button:hover {
+      background-color: #357ABD;
+    }
+
+    .chatbot-button span.emoji {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Menú de Chatbots de Prueba</h1>
+    <div id="chatbotMenu" class="chatbot-menu"></div>
+  </div>
+
+  <script>
+    const chatbots = [
+      { name: "Chatbot de Ventas", url: "https://ejemplo.com/chatbot-ventas", icon: "🛒" },
+      { name: "Chatbot de Soporte", url: "https://ejemplo.com/chatbot-soporte", icon: "🛠️" },
+      { name: "Chatbot de Finanzas", url: "https://ejemplo.com/chatbot-finanzas", icon: "💰" },
+      { name: "Chatbot de RRHH", url: "https://ejemplo.com/chatbot-rrhh", icon: "👥" },
+      { name: "Chatbot Legal", url: "https://ejemplo.com/chatbot-legal", icon: "⚖️" }
+    ];
+
+    function loadChatbotMenu() {
+      const menuContainer = document.getElementById("chatbotMenu");
+
+      if (!menuContainer) {
+        console.error("Elemento con ID 'chatbotMenu' no encontrado.");
+        return;
+      }
+
+      chatbots.forEach(bot => {
+        const button = document.createElement("button");
+        button.className = "chatbot-button";
+        button.onclick = () => window.open(bot.url, "_blank");
+        button.innerHTML = `<span class="emoji">${bot.icon}</span> ${bot.name}`;
+        menuContainer.appendChild(button);
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", loadChatbotMenu);
+  </script>
+</body>
+</html>
