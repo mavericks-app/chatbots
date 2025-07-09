@@ -537,6 +537,11 @@ d.toLocaleTimeString("es-ES", {
           userAgent: navigator.userAgent,
           historyLength: loadHistory(userSelect.value).length,
         };
+        const originalText = faqOk.textContent;
+        faqOk.disabled = true;
+        faqCancel.disabled = true;
+        faqOk.innerHTML =
+          '<div class="spinner inline-block mr-2"></div>Enviando...';
         try {
           await fetch(FAQ_SAVE_ENDPOINT, {
             method: "POST",
@@ -546,6 +551,9 @@ d.toLocaleTimeString("es-ES", {
         } catch (e) {
           console.error(e);
         } finally {
+          faqOk.innerHTML = originalText;
+          faqOk.disabled = false;
+          faqCancel.disabled = false;
           closeFaqModal();
         }
       });
