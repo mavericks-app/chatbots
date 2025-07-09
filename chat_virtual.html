@@ -32,11 +32,14 @@
   <header class="bg-green-600 text-white flex items-center justify-between px-4 py-3 shadow-md gap-2 flex-wrap">
     <h1 class="text-lg font-semibold tracking-wide select-none">Asistente Virtual</h1>
     <div class="flex items-center gap-2 flex-wrap">
-      <label for="endpointSelect" class="text-sm text-white/80">Endpoint:</label>
+      <label for="endpointSelect" class="text-sm text-white/80">Entorno:</label>
       <select id="endpointSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
-        <option value="https://api.inmovilla.com/v3/bot/test">Test</option>
+        <option value="https://api.inmovilla.com/v3/bot/test">Producci&oacute;n</option>
+        <option value="https://test.inmovilla.com/v3/bot/test">Test</option>
+        <option value="http://localhost/app/api/v2/bot/test">Localhost</option>
       </select>
-      <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+      <span id="currentEndpoint" class="text-xs text-white/80 break-all"></span>
+      <input id="tokenInput" type="text" placeholder="JWT Token" title="Para obtener el JWT, accede al CRM, inicia sesi&oacute;n, abre el inspector de Chrome, ve a Aplicaci&oacute;n y copia la cookie llamada 'jwt'." class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
     </div>
   </header>
 
@@ -53,6 +56,7 @@
     const TOKEN_STORAGE_KEY = 'virtualToken';
 
     const endpointSelect = document.getElementById('endpointSelect');
+    const endpointDisplay = document.getElementById('currentEndpoint');
     const tokenInput = document.getElementById('tokenInput');
     const chatBox = document.getElementById('chat');
     const textarea = document.getElementById('message');
@@ -60,9 +64,11 @@
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
     tokenInput.value = localStorage.getItem(TOKEN_STORAGE_KEY) || '';
+    endpointDisplay.textContent = endpointSelect.value;
 
     endpointSelect.addEventListener('change', () => {
       localStorage.setItem(ENDPOINT_STORAGE_KEY, endpointSelect.value);
+      endpointDisplay.textContent = endpointSelect.value;
     });
 
     tokenInput.addEventListener('input', () => {
