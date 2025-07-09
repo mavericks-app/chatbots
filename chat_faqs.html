@@ -77,6 +77,41 @@
     <!-- ============ CHAT ============ -->
     <main id="chat" class="flex-1 overflow-y-auto p-4 space-y-4"></main>
 
+    <!-- ============ FAQ MODAL ============ -->
+    <div
+      id="faqModal"
+      class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+    >
+      <div
+        id="faqDialog"
+        class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-3xl space-y-4 max-h-[90vh] overflow-y-auto"
+      >
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Corrige o mejora la pregunta y la respuesta antes de guardarlas.
+        </p>
+        <input
+          id="faqQuestion"
+          type="text"
+          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100"
+        />
+        <textarea
+          id="faqAnswer"
+          rows="10"
+          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100 resize-y"
+        ></textarea>
+        <div class="flex justify-end gap-2">
+          <button
+            id="faqCancel"
+            class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700"
+          >Cancelar</button>
+          <button
+            id="faqOk"
+            class="px-4 py-2 rounded bg-green-600 text-white"
+          >Aceptar</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ============ INPUT BAR ============ -->
     <footer class="p-3 bg-white/95 dark:bg-gray-800/90 backdrop-blur-md shadow-inner flex items-end gap-3">
       <textarea
@@ -95,6 +130,7 @@
       const PROD_ENDPOINT = "http://localhost:5678/webhook/2764b1cc-570d-4003-827f-7931b73a2b02";
       const TEST_ENDPOINT = "http://localhost:5678/webhook-test/2764b1cc-570d-4003-827f-7931b73a2b02";
       let ENDPOINT_URL = PROD_ENDPOINT; // cambia a TEST_ENDPOINT si lo necesitas
+      const FAQ_SAVE_ENDPOINT = "http://localhost:5678/faq-entry";
 
       /******************** 2. STORAGE KEYS ************************/
       // Cada chatbot mantiene sus propios usuarios e historial para que
@@ -118,6 +154,11 @@
       const renameBtn = document.getElementById("renameUser");
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
+      const faqModal = document.getElementById("faqModal");
+      const faqQuestion = document.getElementById("faqQuestion");
+      const faqAnswer = document.getElementById("faqAnswer");
+      const faqCancel = document.getElementById("faqCancel");
+      const faqOk = document.getElementById("faqOk");
 
       /******************** 4. GLOBAL STATE ************************/
       let abortController = null; // para cancelar fetch en curso
@@ -308,8 +349,19 @@ d.toLocaleTimeString("es-ES", {
       function addMessage(text, from = "user", date = new Date(), save = true) {
         const bubble = document.createElement("div");
         const alignRight = from === "user";
-        bubble.className = `${alignRight ? "self-end bg-green-600 text-white" : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap`;
+        bubble.className = `${alignRight ? "self-end bg-green-600 text-white" : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap relative`;
+        bubble.dataset.raw = text;
+        bubble.dataset.from = from;
         appendTextOrImages(bubble, text);
+
+        if (from === "bot") {
+          const btn = document.createElement("button");
+          btn.textContent = "💡";
+          btn.className = "absolute top-1 right-1 text-lg";
+          btn.title = "Mejorar IA";
+          btn.addEventListener("click", () => openFaqModal(bubble));
+          bubble.appendChild(btn);
+        }
 
         const wrapper = document.createElement("div");
         wrapper.className = "flex flex-col" + (alignRight ? " items-end" : " items-start");
@@ -349,6 +401,33 @@ d.toLocaleTimeString("es-ES", {
       function removeSpinner() {
         const el = document.getElementById("spinnerWrapper");
         el && el.remove();
+      }
+
+      let currentBubble = null;
+
+      function openFaqModal(bubble) {
+        currentBubble = bubble;
+        faqAnswer.value = bubble.dataset.raw || bubble.textContent;
+        const prev = findPreviousOtherText(bubble.parentElement, bubble.dataset.from);
+        faqQuestion.value = prev || "";
+        faqModal.classList.remove("hidden");
+      }
+
+      function closeFaqModal() {
+        faqModal.classList.add("hidden");
+        currentBubble = null;
+      }
+
+      function findPreviousOtherText(wrapper, from) {
+        let el = wrapper.previousElementSibling;
+        while (el) {
+          const b = el.querySelector("div");
+          if (b && b.dataset.from && b.dataset.from !== from) {
+            return b.dataset.raw || b.textContent;
+          }
+          el = el.previousElementSibling;
+        }
+        return "";
       }
 
       function resetConversationState() {
@@ -442,6 +521,26 @@ d.toLocaleTimeString("es-ES", {
         saveHistory(userId, []);
         chatBox.innerHTML = "";
         resetConversationState();
+      });
+
+      faqCancel.addEventListener("click", closeFaqModal);
+
+      faqOk.addEventListener("click", async () => {
+        const payload = {
+          question: faqQuestion.value,
+          answer: faqAnswer.value,
+        };
+        try {
+          await fetch(FAQ_SAVE_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        } catch (e) {
+          console.error(e);
+        } finally {
+          closeFaqModal();
+        }
       });
 
       /******************** 11. INIT ************************/
