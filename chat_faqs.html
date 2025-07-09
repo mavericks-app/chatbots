@@ -83,7 +83,8 @@
       class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg space-y-4"
+        id="faqDialog"
+        class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-3xl space-y-4 max-h-[90vh] overflow-y-auto"
       >
         <p class="text-sm text-gray-600 dark:text-gray-300">
           Corrige o mejora la pregunta y la respuesta antes de guardarlas.
@@ -95,8 +96,8 @@
         />
         <textarea
           id="faqAnswer"
-          rows="8"
-          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100"
+          rows="10"
+          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100 resize-y"
         ></textarea>
         <div class="flex justify-end gap-2">
           <button
