@@ -1,7 +1,7 @@
 :root {
-  --primary: #2563eb;
-  --primary-hover: #1e40af;
-  --bg: #f7f9fb;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --bg: #f0f4f8;
 }
 
 body {
@@ -75,8 +75,8 @@ h1 {
   transform: translateY(-2px);
 }
 
-.chatbot-button span.emoji {
-  font-size: 20px;
+.chatbot-button i.icon {
+  font-size: 18px;
   margin-right: 8px;
 }
 
