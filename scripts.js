@@ -1,6 +1,7 @@
 const chatbots = [
   { name: "Chatbot FAQs", url: "chat_faqs.html", icon: "❓" },
-  { name: "Agente para Comprador", url: "chat_comprador.html", icon: "🏠" }
+  { name: "Agente para Comprador", url: "chat_comprador.html", icon: "🏠" },
+  { name: "Asistente Virtual", url: "chat_virtual.html", icon: "🤖" }
 ];
 
 function loadChatbotMenu() {
