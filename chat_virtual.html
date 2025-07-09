@@ -76,7 +76,7 @@
       localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value);
     });
 
-    function addMessage(text, from = 'user') {
+    function addMessage(text, from = 'user', query = null, json = null) {
       const bubble = document.createElement('div');
       const alignRight = from === 'user';
       bubble.className = `${alignRight ? 'self-end bg-green-600 text-white' : 'bg-white text-gray-900'} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap`;
@@ -85,6 +85,36 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'flex flex-col' + (alignRight ? ' items-end' : ' items-start');
       wrapper.appendChild(bubble);
+
+      if (from === 'bot' && (query || json)) {
+        const icons = document.createElement('div');
+        icons.className = 'flex gap-2 text-sm text-gray-500 mt-1';
+
+        function addToggle(iconText, content) {
+          let box;
+          const icon = document.createElement('span');
+          icon.textContent = iconText;
+          icon.className = 'cursor-pointer select-none';
+          icon.addEventListener('click', () => {
+            if (box) {
+              box.remove();
+              box = null;
+            } else {
+              box = document.createElement('pre');
+              box.className = 'whitespace-pre-wrap bg-gray-100 p-2 rounded-md text-xs max-w-[90%] overflow-auto';
+              box.textContent = typeof content === 'object' ? JSON.stringify(content, null, 2) : content;
+              icons.after(box);
+            }
+          });
+          icons.appendChild(icon);
+        }
+
+        if (query) addToggle('📝', query);
+        if (json) addToggle('📄', json);
+
+        wrapper.appendChild(icons);
+      }
+
       chatBox.appendChild(wrapper);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -128,6 +158,10 @@
         message: text
       };
 
+      if (/test\.inmovilla\.com/.test(endpointSelect.value) || /localhost/.test(endpointSelect.value)) {
+        body.mode = 'debug';
+      }
+
       try {
         const resp = await fetch(endpointSelect.value, {
           method: 'POST',
@@ -138,8 +172,11 @@
         const data = await resp.json();
         if (Array.isArray(data)) {
           data.forEach(part => {
-            const msg = part[0]?.content;
-            if (msg) addMessage(msg, 'bot');
+            const first = part[0] || {};
+            const msg = first.content;
+            const query = first.query;
+            const jsonResp = first.json;
+            if (msg) addMessage(msg, 'bot', query, jsonResp);
           });
         } else {
           addMessage('⚠️ Respuesta inesperada del servidor', 'bot');
