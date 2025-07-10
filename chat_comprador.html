@@ -79,17 +79,21 @@
 
     <!-- ============ INPUT BAR ============ -->
     <footer class="p-3 bg-white/95 dark:bg-gray-800/90 backdrop-blur-md shadow-inner flex items-end gap-3">
-      <textarea
-        id="message"
-        rows="1"
-        placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
-        class="flex-1 resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
-      ></textarea>
+      <div class="relative flex-1">
+        <textarea
+          id="message"
+          rows="1"
+          placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
+          class="w-full resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
+        ></textarea>
+        <button id="voice" title="Hablar" class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200">🎙️</button>
+      </div>
       <button id="send" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-5 py-3 font-medium shadow-md">Enviar</button>
       <button id="reset" class="bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-700/60 dark:hover:bg-red-700 dark:text-red-100 rounded-xl px-5 py-3 font-medium shadow-md">Reset</button>
     </footer>
 
     <!-- ============ SCRIPT ============ -->
+    <script src="voice.js"></script>
     <script>
       /******************** 1. ENDPOINTS ************************/
       const PROD_ENDPOINT = "http://localhost:5678/webhook/16dd01d5-1959-48e9-b8b9-c5bb9ce6e2e6";
@@ -112,11 +116,13 @@
       const chatBox = document.getElementById("chat");
       const textarea = document.getElementById("message");
       const sendBtn = document.getElementById("send");
+      const voiceBtn = document.getElementById("voice");
       const resetBtn = document.getElementById("reset");
       const userSelect = document.getElementById("userSelect");
       const renameBtn = document.getElementById("renameUser");
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
+      attachVoiceInput(textarea, voiceBtn);
 
       /******************** 4. GLOBAL STATE ************************/
       let abortController = null; // para cancelar fetch en curso

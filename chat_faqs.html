@@ -89,16 +89,34 @@
         <p class="text-sm text-gray-600 dark:text-gray-300">
           Corrige o mejora la pregunta y la respuesta antes de guardarlas.
         </p>
-        <input
-          id="faqQuestion"
-          type="text"
-          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100"
-        />
-        <textarea
-          id="faqAnswer"
-          rows="10"
-          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100 resize-y"
-        ></textarea>
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <input
+              id="faqQuestion"
+              type="text"
+              class="w-full border rounded p-2 pr-10 dark:bg-gray-700 dark:text-gray-100"
+            />
+            <button
+              id="faqQuestionVoice"
+              title="Hablar"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200"
+            >🎙️</button>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <textarea
+              id="faqAnswer"
+              rows="10"
+              class="w-full border rounded p-2 pr-10 dark:bg-gray-700 dark:text-gray-100 resize-y"
+            ></textarea>
+            <button
+              id="faqAnswerVoice"
+              title="Hablar"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200"
+            >🎙️</button>
+          </div>
+        </div>
         <div class="flex justify-end gap-2">
           <button
             id="faqCancel"
@@ -114,17 +132,21 @@
 
     <!-- ============ INPUT BAR ============ -->
     <footer class="p-3 bg-white/95 dark:bg-gray-800/90 backdrop-blur-md shadow-inner flex items-end gap-3">
-      <textarea
-        id="message"
-        rows="1"
-        placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
-        class="flex-1 resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
-      ></textarea>
+      <div class="relative flex-1">
+        <textarea
+          id="message"
+          rows="1"
+          placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
+          class="w-full resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
+        ></textarea>
+        <button id="voice" title="Hablar" class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200">🎙️</button>
+      </div>
       <button id="send" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-5 py-3 font-medium shadow-md">Enviar</button>
       <button id="reset" class="bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-700/60 dark:hover:bg-red-700 dark:text-red-100 rounded-xl px-5 py-3 font-medium shadow-md">Reset</button>
     </footer>
 
     <!-- ============ SCRIPT ============ -->
+    <script src="voice.js"></script>
     <script>
       /******************** 1. ENDPOINTS ************************/
       const PROD_ENDPOINT = "http://localhost:5678/webhook/2764b1cc-570d-4003-827f-7931b73a2b02";
@@ -150,6 +172,7 @@
       const chatBox = document.getElementById("chat");
       const textarea = document.getElementById("message");
       const sendBtn = document.getElementById("send");
+      const voiceBtn = document.getElementById("voice");
       const resetBtn = document.getElementById("reset");
       const userSelect = document.getElementById("userSelect");
       const renameBtn = document.getElementById("renameUser");
@@ -157,9 +180,14 @@
       const themeToggle = document.getElementById("themeToggle");
       const faqModal = document.getElementById("faqModal");
       const faqQuestion = document.getElementById("faqQuestion");
+      const faqQuestionVoice = document.getElementById("faqQuestionVoice");
       const faqAnswer = document.getElementById("faqAnswer");
+      const faqAnswerVoice = document.getElementById("faqAnswerVoice");
       const faqCancel = document.getElementById("faqCancel");
       const faqOk = document.getElementById("faqOk");
+      attachVoiceInput(textarea, voiceBtn);
+      attachVoiceInput(faqQuestion, faqQuestionVoice);
+      attachVoiceInput(faqAnswer, faqAnswerVoice);
 
       /******************** 4. GLOBAL STATE ************************/
       let abortController = null; // para cancelar fetch en curso
@@ -357,7 +385,7 @@ d.toLocaleTimeString("es-ES", {
 
         if (from === "bot") {
           const btn = document.createElement("button");
-          btn.textContent = "💡";
+          btn.textContent = "🧠";
           btn.className = "absolute top-1 right-1 text-lg";
           btn.title = "Mejorar IA";
           btn.addEventListener("click", () => openFaqModal(bubble));
