@@ -210,7 +210,10 @@
           return;
         }
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
+        const respData = await resp.json();
+        const meta = respData.meta;
+        const data = respData.data ?? respData;
+        if (meta) console.log('Info de la petici\u00f3n', meta);
         if (Array.isArray(data)) {
           data.forEach(part => {
             const first = Array.isArray(part) ? (part[0] || {}) : part || {};

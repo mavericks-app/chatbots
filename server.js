@@ -27,9 +27,19 @@ app.use(express.json());
 
 app.get(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
   try {
+    const start = Date.now();
     const response = await fetch('https://api.inmovilla.com/v3/bot/test');
+    const durationMs = Date.now() - start;
     const data = await response.json();
-    res.json(data);
+    res.status(response.status).json({
+      data,
+      meta: {
+        method: 'GET',
+        target: 'https://api.inmovilla.com/v3/bot/test',
+        status: response.status,
+        durationMs,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: 'Error al conectar con la API de Inmovilla' });
   }
@@ -53,11 +63,27 @@ app.all(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
     if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
       options.body = JSON.stringify(req.body);
     }
+    const start = Date.now();
     const response = await fetch(target, options);
-    const contentType = response.headers.get('content-type');
-    res.set('content-type', contentType);
-    const data = await response.text();
-    res.status(response.status).send(data);
+    const durationMs = Date.now() - start;
+
+    const contentType = response.headers.get('content-type') || '';
+    let data;
+    if (contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
+
+    res.status(response.status).json({
+      data,
+      meta: {
+        method,
+        target,
+        status: response.status,
+        durationMs,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: 'Error al conectar con la API de Inmovilla' });
   }
