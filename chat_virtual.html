@@ -211,9 +211,10 @@
         }
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const respData = await resp.json();
-        const meta = respData.meta;
-        const data = respData.data ?? respData;
-        if (meta) console.log('Info de la petici\u00f3n', meta);
+        const peticion = respData.peticion;
+        if (peticion) console.log('Info de la petici\u00f3n', peticion);
+        if (peticion) delete respData.peticion;
+        const data = respData;
         if (Array.isArray(data)) {
           data.forEach(part => {
             const first = Array.isArray(part) ? (part[0] || {}) : part || {};

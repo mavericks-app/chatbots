@@ -26,15 +26,12 @@ export default async function handler(req, res) {
       data = await response.text();
     }
 
-    res.status(response.status).json({
-      data,
-      meta: {
-        method,
-        target,
-        status: response.status,
-        durationMs,
-      },
-    });
+    const peticion = { method, target, status: response.status, durationMs };
+    if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
+      res.status(response.status).json({ ...data, peticion });
+    } else {
+      res.status(response.status).json({ data, peticion });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al conectar con la API de Inmovilla' });
