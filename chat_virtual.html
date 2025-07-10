@@ -72,6 +72,12 @@
       endpointDisplay.textContent = endpointSelect.value;
     });
 
+    // Redefinir la función para obtener el endpoint real
+    function getRealEndpoint() {
+      // Siempre usar el proxy y pasar el endpoint real como parámetro
+      return '/proxy/inmovilla?target=' + encodeURIComponent(endpointSelect.value);
+    }
+
     tokenInput.addEventListener('input', () => {
       localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value);
     });
@@ -163,7 +169,7 @@
       }
 
       try {
-        const resp = await fetch(endpointSelect.value, {
+        const resp = await fetch(getRealEndpoint(), {
           method: 'POST',
           headers,
           body: JSON.stringify(body)
