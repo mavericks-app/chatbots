@@ -55,10 +55,12 @@
 
   <footer class="p-3 bg-white/95 backdrop-blur-md shadow-inner flex items-end gap-3">
     <textarea id="message" rows="1" placeholder="Escribe tu mensaje…" class="flex-1 resize-none rounded-xl border border-gray-300 p-3 focus:outline-none max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"></textarea>
+    <button id="voice" title="Hablar" class="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl px-4 py-3 font-medium shadow-md">🎤</button>
     <button id="send" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-5 py-3 font-medium shadow-md">Enviar</button>
   </footer>
 
   <script src="appendTextOrImages.js"></script>
+  <script src="voice.js"></script>
   <script>
     const ENDPOINT_STORAGE_KEY = 'virtualEndpoint';
     const TOKEN_STORAGE_KEY = 'virtualToken';
@@ -71,8 +73,10 @@
     const chatBox = document.getElementById('chat');
     const textarea = document.getElementById('message');
     const sendBtn = document.getElementById('send');
+    const voiceBtn = document.getElementById('voice');
     const modalOverlay = document.getElementById('modalOverlay');
     const modalBox = document.getElementById('modalBox');
+    attachVoiceInput(textarea, voiceBtn);
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
     tokenInput.value = localStorage.getItem(TOKEN_STORAGE_KEY) || '';
