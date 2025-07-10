@@ -90,28 +90,32 @@
           Corrige o mejora la pregunta y la respuesta antes de guardarlas.
         </p>
         <div class="flex gap-2">
-          <input
-            id="faqQuestion"
-            type="text"
-            class="flex-1 border rounded p-2 dark:bg-gray-700 dark:text-gray-100"
-          />
-          <button
-            id="faqQuestionVoice"
-            title="Hablar"
-            class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl px-4 py-2 shadow-md"
-          >🎤</button>
+          <div class="relative flex-1">
+            <input
+              id="faqQuestion"
+              type="text"
+              class="w-full border rounded p-2 pr-10 dark:bg-gray-700 dark:text-gray-100"
+            />
+            <button
+              id="faqQuestionVoice"
+              title="Hablar"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200"
+            >🎤</button>
+          </div>
         </div>
         <div class="flex gap-2">
-          <textarea
-            id="faqAnswer"
-            rows="10"
-            class="flex-1 border rounded p-2 dark:bg-gray-700 dark:text-gray-100 resize-y"
-          ></textarea>
-          <button
-            id="faqAnswerVoice"
-            title="Hablar"
-            class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl px-4 py-2 shadow-md self-start"
-          >🎤</button>
+          <div class="relative flex-1">
+            <textarea
+              id="faqAnswer"
+              rows="10"
+              class="w-full border rounded p-2 pr-10 dark:bg-gray-700 dark:text-gray-100 resize-y"
+            ></textarea>
+            <button
+              id="faqAnswerVoice"
+              title="Hablar"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200"
+            >🎤</button>
+          </div>
         </div>
         <div class="flex justify-end gap-2">
           <button
@@ -128,13 +132,15 @@
 
     <!-- ============ INPUT BAR ============ -->
     <footer class="p-3 bg-white/95 dark:bg-gray-800/90 backdrop-blur-md shadow-inner flex items-end gap-3">
-      <textarea
-        id="message"
-        rows="1"
-        placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
-        class="flex-1 resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
-      ></textarea>
-      <button id="voice" title="Hablar" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl px-4 py-3 font-medium shadow-md">🎤</button>
+      <div class="relative flex-1">
+        <textarea
+          id="message"
+          rows="1"
+          placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
+          class="w-full resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
+        ></textarea>
+        <button id="voice" title="Hablar" class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200">🎤</button>
+      </div>
       <button id="send" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-5 py-3 font-medium shadow-md">Enviar</button>
       <button id="reset" class="bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-700/60 dark:hover:bg-red-700 dark:text-red-100 rounded-xl px-5 py-3 font-medium shadow-md">Reset</button>
     </footer>

@@ -8,7 +8,7 @@
   if (!document.getElementById('voice-style')) {
     const style = document.createElement('style');
     style.id = 'voice-style';
-    style.textContent = `.voice-recording{background-color:#dc2626!important;color:#fff!important}
+    style.textContent = `.voice-recording{color:#dc2626!important}
 .voice-waves{display:inline-block;position:relative;width:1em;height:1em;}
 .voice-waves span{position:absolute;bottom:0;width:2px;height:20%;background:currentColor;animation:voice-wave 1s infinite ease-in-out;}
 .voice-waves span:nth-child(1){left:0;animation-delay:-0.45s;}
