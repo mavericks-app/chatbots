@@ -22,9 +22,43 @@ async function handleFaqEntry(req, res) {
   }
 }
 
+async function handleVirtualRequest(req, res) {
+  let body = '';
+  for await (const chunk of req) {
+    body += chunk;
+  }
+  const data = body ? JSON.parse(body) : {};
+  const { endpoint, token, payload } = data;
+  if (!endpoint || !payload) {
+    res.statusCode = 400;
+    res.end('Missing endpoint or payload');
+    return;
+  }
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload)
+    });
+    const text = await response.text();
+    res.writeHead(response.status, {
+      'Content-Type': response.headers.get('content-type') || 'application/json'
+    });
+    res.end(text);
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 500;
+    res.end('Error forwarding request');
+  }
+}
+
 const app = http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/api/faq-entry') {
     handleFaqEntry(req, res);
+  } else if (req.method === 'POST' && req.url === '/api/virtual-request') {
+    handleVirtualRequest(req, res);
   } else {
     res.statusCode = 404;
     res.end('Not Found');
