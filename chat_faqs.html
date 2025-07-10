@@ -89,16 +89,30 @@
         <p class="text-sm text-gray-600 dark:text-gray-300">
           Corrige o mejora la pregunta y la respuesta antes de guardarlas.
         </p>
-        <input
-          id="faqQuestion"
-          type="text"
-          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100"
-        />
-        <textarea
-          id="faqAnswer"
-          rows="10"
-          class="w-full border rounded p-2 dark:bg-gray-700 dark:text-gray-100 resize-y"
-        ></textarea>
+        <div class="flex gap-2">
+          <input
+            id="faqQuestion"
+            type="text"
+            class="flex-1 border rounded p-2 dark:bg-gray-700 dark:text-gray-100"
+          />
+          <button
+            id="faqQuestionVoice"
+            title="Hablar"
+            class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl px-4 py-2 shadow-md"
+          >🎤</button>
+        </div>
+        <div class="flex gap-2">
+          <textarea
+            id="faqAnswer"
+            rows="10"
+            class="flex-1 border rounded p-2 dark:bg-gray-700 dark:text-gray-100 resize-y"
+          ></textarea>
+          <button
+            id="faqAnswerVoice"
+            title="Hablar"
+            class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl px-4 py-2 shadow-md self-start"
+          >🎤</button>
+        </div>
         <div class="flex justify-end gap-2">
           <button
             id="faqCancel"
@@ -160,10 +174,14 @@
       const themeToggle = document.getElementById("themeToggle");
       const faqModal = document.getElementById("faqModal");
       const faqQuestion = document.getElementById("faqQuestion");
+      const faqQuestionVoice = document.getElementById("faqQuestionVoice");
       const faqAnswer = document.getElementById("faqAnswer");
+      const faqAnswerVoice = document.getElementById("faqAnswerVoice");
       const faqCancel = document.getElementById("faqCancel");
       const faqOk = document.getElementById("faqOk");
       attachVoiceInput(textarea, voiceBtn);
+      attachVoiceInput(faqQuestion, faqQuestionVoice);
+      attachVoiceInput(faqAnswer, faqAnswerVoice);
 
       /******************** 4. GLOBAL STATE ************************/
       let abortController = null; // para cancelar fetch en curso
