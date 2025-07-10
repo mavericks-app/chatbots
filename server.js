@@ -25,7 +25,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/proxy/inmovilla', async (req, res) => {
+app.get(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
   try {
     const response = await fetch('https://api.inmovilla.com/v3/bot/test');
     const data = await response.json();
@@ -35,7 +35,7 @@ app.get('/proxy/inmovilla', async (req, res) => {
   }
 });
 
-app.all('/proxy/inmovilla', async (req, res) => {
+app.all(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
   try {
     const target = req.query.target;
     if (!target) {

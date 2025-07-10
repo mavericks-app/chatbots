@@ -75,7 +75,7 @@
     // Redefinir la función para obtener el endpoint real
     function getRealEndpoint() {
       // Siempre usar el proxy y pasar el endpoint real como parámetro
-      return '/proxy/inmovilla?target=' + encodeURIComponent(endpointSelect.value);
+      return '/api/proxy/inmovilla?target=' + encodeURIComponent(endpointSelect.value);
     }
 
     tokenInput.addEventListener('input', () => {
