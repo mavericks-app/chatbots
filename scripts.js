@@ -1,7 +1,9 @@
 const chatbots = [
-  { name: "Chatbot FAQs", url: "chat_faqs.html", icon: "fa-circle-question" },
-  { name: "Agente para Comprador", url: "chat_comprador.html", icon: "fa-house" },
-  { name: "Asistente Virtual", url: "chat_virtual.html", icon: "fa-robot" }
+  { name: "Chatbot FAQs", url: "chat_faqs.html", icon: "fa-circle-question", active: true },
+  { name: "Agente para Comprador", url: "chat_comprador.html", icon: "fa-house", active: true },
+  { name: "Agente para Vendedor", url: "chat_vendedor.html", icon: "fa-user-tie", active: false },
+  { name: "Agente para Inquilino", url: "chat_inquilino.html", icon: "fa-user", active: false },
+  { name: "Asistente Virtual", url: "chat_virtual.html", icon: "fa-robot", active: true }
 ];
 
 function loadChatbotMenu() {
@@ -16,13 +18,18 @@ function loadChatbotMenu() {
   chatbots.forEach((bot, index) => {
     const button = document.createElement("button");
     button.className = "chatbot-button";
+    if (!bot.active) {
+      button.classList.add("disabled");
+      button.disabled = true;
+    }
     button.innerHTML = `<i class="fa-solid ${bot.icon} icon"></i> ${bot.name}`;
     button.addEventListener("click", () => {
+      if (!bot.active) return;
       document.querySelectorAll(".chatbot-button.active").forEach(b => b.classList.remove("active"));
       button.classList.add("active");
       if (frame) frame.src = bot.url;
     });
-    if (index === 0 && frame) {
+    if (index === 0 && frame && bot.active) {
       frame.src = bot.url;
       button.classList.add("active");
     }
