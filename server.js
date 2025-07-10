@@ -4,11 +4,7 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 
 async function handleFaqEntry(req, res) {
-  let body = '';
-  for await (const chunk of req) {
-    body += chunk;
-  }
-  const data = body ? JSON.parse(body) : {};
+  const data = req.body || {};
   try {
     const response = await fetch('https://procesos.inmovilla.com/peticionesexternas/chatbot/postFaqRapida.php', {
       method: 'POST',
@@ -29,7 +25,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/proxy/inmovilla', async (req, res) => {
+app.get(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
   try {
     const response = await fetch('https://api.inmovilla.com/v3/bot/test');
     const data = await response.json();
@@ -39,7 +35,7 @@ app.get('/proxy/inmovilla', async (req, res) => {
   }
 });
 
-app.all('/proxy/inmovilla', async (req, res) => {
+app.all(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
   try {
     const target = req.query.target;
     if (!target) {
@@ -67,14 +63,9 @@ app.all('/proxy/inmovilla', async (req, res) => {
   }
 });
 
-const httpServer = http.createServer((req, res) => {
-  if (req.method === 'POST' && req.url === '/api/faq-entry') {
-    handleFaqEntry(req, res);
-  } else {
-    res.statusCode = 404;
-    res.end('Not Found');
-  }
-});
+app.post('/api/faq-entry', handleFaqEntry);
+
+const httpServer = http.createServer(app);
 
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
