@@ -40,6 +40,10 @@
       </select>
       <span id="currentEndpoint" class="text-xs text-white/80 break-all"></span>
       <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+      <label class="text-sm text-white/80 flex items-center gap-1" title="Enviar conversaciones en modo debug">
+        <input id="debugToggle" type="checkbox" class="text-gray-900" />
+        Debug
+      </label>
       <span class="text-white/80 cursor-help" title="Para obtener el JWT, accede al CRM, inicia sesi&oacute;n, abre el inspector de Chrome, ve a Aplicaci&oacute;n y copia la cookie llamada 'jwt'.">&#9432;</span>
     </div>
   </header>
@@ -55,21 +59,28 @@
   <script>
     const ENDPOINT_STORAGE_KEY = 'virtualEndpoint';
     const TOKEN_STORAGE_KEY = 'virtualToken';
+    const DEBUG_STORAGE_KEY = 'virtualDebug';
 
     const endpointSelect = document.getElementById('endpointSelect');
     const endpointDisplay = document.getElementById('currentEndpoint');
     const tokenInput = document.getElementById('tokenInput');
+    const debugToggle = document.getElementById('debugToggle');
     const chatBox = document.getElementById('chat');
     const textarea = document.getElementById('message');
     const sendBtn = document.getElementById('send');
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
     tokenInput.value = localStorage.getItem(TOKEN_STORAGE_KEY) || '';
+    debugToggle.checked = localStorage.getItem(DEBUG_STORAGE_KEY) === '1';
     endpointDisplay.textContent = endpointSelect.value;
 
     endpointSelect.addEventListener('change', () => {
       localStorage.setItem(ENDPOINT_STORAGE_KEY, endpointSelect.value);
       endpointDisplay.textContent = endpointSelect.value;
+    });
+
+    debugToggle.addEventListener('change', () => {
+      localStorage.setItem(DEBUG_STORAGE_KEY, debugToggle.checked ? '1' : '0');
     });
 
     // Redefinir la función para obtener el endpoint real
@@ -164,7 +175,7 @@
         message: text
       };
 
-      if (/test\.inmovilla\.com/.test(endpointSelect.value) || /localhost/.test(endpointSelect.value)) {
+      if (debugToggle.checked) {
         body.mode = 'debug';
       }
 
