@@ -198,12 +198,17 @@
         const data = await resp.json();
         if (Array.isArray(data)) {
           data.forEach(part => {
-            const first = part[0] || {};
+            const first = Array.isArray(part) ? (part[0] || {}) : part || {};
             const msg = first.content;
             const query = first.query;
             const jsonResp = first.json;
             if (msg) addMessage(msg, 'bot', query, jsonResp);
           });
+        } else if (data && typeof data === 'object') {
+          const msg = data.content;
+          const query = data.query;
+          const jsonResp = data.json;
+          if (msg) addMessage(msg, 'bot', query, jsonResp);
         } else {
           addMessage('⚠️ Respuesta inesperada del servidor', 'bot');
         }
