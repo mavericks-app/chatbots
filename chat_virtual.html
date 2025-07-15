@@ -49,8 +49,14 @@
   </header>
 
   <main id="chat" class="flex-1 overflow-y-auto p-4 space-y-4"></main>
-  <div id="modalOverlay" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-    <pre id="modalBox" class="bg-white p-4 rounded-lg max-h-[90%] overflow-auto whitespace-pre-wrap text-sm w-full max-w-3xl"></pre>
+  <div id="modalOverlay" class="hidden fixed inset-0 bg-black/50 flex items-start justify-center overflow-auto py-[5vh] px-4">
+    <div class="bg-white p-4 rounded-lg max-h-[90vh] overflow-auto text-sm w-full max-w-3xl flex flex-col gap-2">
+      <pre id="modalBox" class="whitespace-pre-wrap flex-1 overflow-auto"></pre>
+      <div class="flex justify-end gap-2">
+        <button id="copyBtn" class="bg-green-600 text-white rounded px-2 py-1 text-xs">Copiar</button>
+        <button id="copyParamsBtn" class="bg-green-600 text-white rounded px-2 py-1 text-xs hidden">Copiar con params</button>
+      </div>
+    </div>
   </div>
 
   <footer class="p-3 bg-white/95 backdrop-blur-md shadow-inner flex items-end gap-3">
@@ -78,6 +84,10 @@
     const voiceBtn = document.getElementById('voice');
     const modalOverlay = document.getElementById('modalOverlay');
     const modalBox = document.getElementById('modalBox');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyParamsBtn = document.getElementById('copyParamsBtn');
+    let modalContent = '';
+    let modalType = '';
     attachVoiceInput(textarea, voiceBtn);
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
@@ -104,18 +114,22 @@
       localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value);
     });
 
-    function openModal(content) {
+    function openModal(content, type) {
+      modalType = type || '';
       try {
         if (typeof content === 'string' && content.trim().startsWith('{')) {
-          modalBox.textContent = JSON.stringify(JSON.parse(content), null, 2);
+          modalContent = JSON.stringify(JSON.parse(content), null, 2);
         } else if (typeof content === 'object') {
-          modalBox.textContent = JSON.stringify(content, null, 2);
+          modalContent = JSON.stringify(content, null, 2);
         } else {
-          modalBox.textContent = content;
+          modalContent = content;
         }
       } catch {
-        modalBox.textContent = content;
+        modalContent = content;
       }
+      modalBox.textContent = modalContent;
+      modalBox.classList.toggle('text-xs', modalType === 'query');
+      copyParamsBtn.classList.toggle('hidden', modalType !== 'query');
       modalOverlay.classList.remove('hidden');
     }
 
@@ -125,7 +139,35 @@
       }
     });
 
-    function addMessage(text, from = 'user', query = null, json = null) {
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(modalContent);
+    });
+
+    copyParamsBtn.addEventListener('click', () => {
+      const withParams = applyParams(modalContent);
+      navigator.clipboard.writeText(withParams);
+    });
+
+    function applyParams(content) {
+      const match = content.split(/Params:/);
+      if (match.length < 2) return content;
+      const queryPart = match[0].trim();
+      try {
+        const params = JSON.parse(match.slice(1).join('Params:'));
+        let result = queryPart;
+        for (const key in params) {
+          const val = params[key];
+          const escaped = key.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+          const replacer = typeof val === 'string' ? `'${val}'` : val;
+          result = result.replace(new RegExp(escaped, 'g'), replacer);
+        }
+        return result;
+      } catch {
+        return content;
+      }
+    }
+
+    function addMessage(text, from = 'user', query = null, json = null, error = null) {
       const bubble = document.createElement('div');
       const alignRight = from === 'user';
       bubble.className = `${alignRight ? 'self-end bg-green-600 text-white' : 'bg-white text-gray-900'} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap`;
@@ -135,20 +177,23 @@
       wrapper.className = 'flex flex-col' + (alignRight ? ' items-end' : ' items-start');
       wrapper.appendChild(bubble);
 
-      if (from === 'bot' && (query || json)) {
+      if (from === 'bot' && (query || json || error)) {
         const icons = document.createElement('div');
         icons.className = 'flex gap-2 text-sm text-gray-500 mt-1';
 
-        function addToggle(iconText, content) {
-          const icon = document.createElement('span');
-          icon.textContent = iconText;
-          icon.className = 'cursor-pointer select-none';
-          icon.addEventListener('click', () => openModal(content));
-          icons.appendChild(icon);
+        function addToggle(iconText, content, type) {
+          const view = document.createElement('span');
+          view.textContent = iconText;
+          view.className = 'cursor-pointer select-none';
+          view.title = 'Ver ' + type;
+          view.addEventListener('click', () => openModal(content, type));
+          icons.appendChild(view);
+
         }
 
-        if (query) addToggle('📝', query);
-        if (json) addToggle('📄', json);
+        if (query) addToggle('📝', query, 'query');
+        if (json) addToggle('📄', json, 'json');
+        if (error) addToggle('❌', error, 'error');
 
         wrapper.appendChild(icons);
       }
@@ -223,13 +268,15 @@
             const msg = first.content;
             const query = first.query;
             const jsonResp = first.json;
-            if (msg) addMessage(msg, 'bot', query, jsonResp);
+            const err = first.Error;
+            if (msg) addMessage(msg, 'bot', query, jsonResp, err);
           });
         } else if (data && typeof data === 'object') {
           const msg = data.content;
           const query = data.query;
           const jsonResp = data.json;
-          if (msg) addMessage(msg, 'bot', query, jsonResp);
+          const err = data.Error;
+          if (msg) addMessage(msg, 'bot', query, jsonResp, err);
         } else {
           addMessage('⚠️ Respuesta inesperada del servidor', 'bot');
         }
