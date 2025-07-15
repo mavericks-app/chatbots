@@ -50,11 +50,11 @@
 
   <main id="chat" class="flex-1 overflow-y-auto p-4 space-y-4"></main>
   <div id="modalOverlay" class="hidden fixed inset-0 bg-black/50 flex items-start justify-center overflow-auto py-[5vh] px-4">
-    <div class="bg-white p-4 rounded-lg max-h-[90vh] overflow-auto text-sm w-full max-w-3xl flex flex-col gap-2">
+    <div class="bg-white p-4 rounded-lg max-h-[80vh] overflow-auto text-sm w-full max-w-3xl flex flex-col gap-2">
       <pre id="modalBox" class="whitespace-pre-wrap flex-1 overflow-auto"></pre>
       <div class="flex justify-end gap-2">
-        <button id="copyBtn" class="bg-green-600 text-white rounded px-2 py-1 text-xs">Copiar</button>
-        <button id="copyParamsBtn" class="bg-green-600 text-white rounded px-2 py-1 text-xs hidden">Copiar con params</button>
+        <button id="copyBtn" class="bg-green-600 text-white rounded px-2 py-1 text-xs transition-colors">Copiar</button>
+        <button id="copyParamsBtn" class="bg-green-600 text-white rounded px-2 py-1 text-xs hidden transition-colors">Copiar con params</button>
       </div>
     </div>
   </div>
@@ -139,13 +139,27 @@
       }
     });
 
+    function showCopied(btn) {
+      const original = btn.textContent;
+      btn.textContent = 'Copiado';
+      btn.classList.add('bg-green-700');
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('bg-green-700');
+        btn.disabled = false;
+      }, 1000);
+    }
+
     copyBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(modalContent);
+      showCopied(copyBtn);
     });
 
     copyParamsBtn.addEventListener('click', () => {
       const withParams = applyParams(modalContent);
       navigator.clipboard.writeText(withParams);
+      showCopied(copyParamsBtn);
     });
 
     function applyParams(content) {
