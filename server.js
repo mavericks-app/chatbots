@@ -1,6 +1,8 @@
 const http = require('http');
 const express = require('express');
-const fetch = require('node-fetch');
+// Prefer the built-in fetch when available to reduce dependencies
+// and fall back to the node-fetch package for older Node versions
+const fetch = global.fetch || require('node-fetch');
 const cors = require('cors');
 
 async function handleFaqEntry(req, res) {
