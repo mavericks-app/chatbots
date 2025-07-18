@@ -343,8 +343,24 @@
       function loadHistoryIntoChat(userId) {
         chatBox.innerHTML = "";
         const hist = loadHistory(userId);
-        hist.forEach((msg) => addMessage(msg.text, msg.from, new Date(msg.ts), false));
+        hist.forEach((msg) =>
+          addMessage(msg.text, msg.from, new Date(msg.ts), false)
+        );
         chatBox.scrollTop = chatBox.scrollHeight;
+        updateLangSelectState();
+      }
+
+      function updateLangSelectState() {
+        const hasHistory = loadHistory(userSelect.value).length > 0;
+        langSelect.disabled = hasHistory;
+        if (hasHistory) {
+          langSelect.title =
+            "Solo se puede modificar al inicio de la conversación";
+          langSelect.classList.add("opacity-40", "cursor-not-allowed");
+        } else {
+          langSelect.title = "";
+          langSelect.classList.remove("opacity-40", "cursor-not-allowed");
+        }
       }
 
       /******************** 8. CHAT UI HELPERS ************************/
@@ -574,6 +590,7 @@ d.toLocaleTimeString("es-ES", {
         textarea.value = "";
         textarea.style.height = "auto";
         addMessage(text, "user");
+        updateLangSelectState();
 
         if (awaitingResponse) {
           // Estamos esperando: cancelar y concatenar
@@ -609,6 +626,7 @@ d.toLocaleTimeString("es-ES", {
         saveHistory(userId, []);
         chatBox.innerHTML = "";
         resetConversationState();
+        updateLangSelectState();
       });
 
       faqCancel.addEventListener("click", closeFaqModal);
