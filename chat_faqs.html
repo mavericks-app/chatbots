@@ -68,9 +68,29 @@
         <button id="themeToggle" title="Cambiar tema" class="text-xl leading-none select-none">🌙</button>
 
         <label for="userSelect" class="hidden sm:block text-sm text-white/80">Usuario:</label>
-        <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"></select>
-        <button id="renameUser" title="Renombrar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">✏️</button>
-        <button id="deleteUser" title="Eliminar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">🗑️</button>
+        <select
+          id="userSelect"
+          class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+        ></select>
+        <label for="langSelect" class="hidden sm:block text-sm text-white/80">Idioma:</label>
+        <select
+          id="langSelect"
+          class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="español" selected>Español</option>
+          <option value="portugués">Portugués</option>
+          <option value="inglés">Inglés</option>
+        </select>
+        <button
+          id="renameUser"
+          title="Renombrar"
+          class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5 transition-colors"
+        >✏️</button>
+        <button
+          id="deleteUser"
+          title="Eliminar"
+          class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5 transition-colors"
+        >🗑️</button>
       </div>
     </header>
 
@@ -94,7 +114,7 @@
             <input
               id="faqQuestion"
               type="text"
-              class="w-full border rounded p-2 pr-10 dark:bg-gray-700 dark:text-gray-100"
+              class="w-full border border-gray-300 dark:border-gray-600 rounded p-2 pr-10 bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button
               id="faqQuestionVoice"
@@ -108,7 +128,7 @@
             <textarea
               id="faqAnswer"
               rows="10"
-              class="w-full border rounded p-2 pr-10 dark:bg-gray-700 dark:text-gray-100 resize-y"
+              class="w-full border border-gray-300 dark:border-gray-600 rounded p-2 pr-10 bg-white dark:bg-gray-700 dark:text-gray-100 resize-y focus:outline-none focus:ring-2 focus:ring-green-500"
             ></textarea>
             <button
               id="faqAnswerVoice"
@@ -120,11 +140,11 @@
         <div class="flex justify-end gap-2">
           <button
             id="faqCancel"
-            class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700"
+            class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
           >Cancelar</button>
           <button
             id="faqOk"
-            class="px-4 py-2 rounded bg-green-600 text-white"
+            class="px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
           >Aceptar</button>
         </div>
       </div>
@@ -137,7 +157,7 @@
           id="message"
           rows="1"
           placeholder="Escribe tu mensaje… (Shift+Enter = salto de línea)"
-          class="w-full resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:text-gray-100 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
+          class="w-full resize-none rounded-xl border border-gray-300 dark:border-gray-700 p-3 pr-10 bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 max-h-40 overflow-y-auto placeholder:text-gray-400 text-sm"
         ></textarea>
         <button id="voice" title="Hablar" class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200">🎙️</button>
       </div>
@@ -175,6 +195,7 @@
       const voiceBtn = document.getElementById("voice");
       const resetBtn = document.getElementById("reset");
       const userSelect = document.getElementById("userSelect");
+      const langSelect = document.getElementById("langSelect");
       const renameBtn = document.getElementById("renameUser");
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
@@ -507,6 +528,7 @@ d.toLocaleTimeString("es-ES", {
         const urlencoded = new URLSearchParams();
         urlencoded.append("question", payload);
         urlencoded.append("user_key", userSelect.value);
+        urlencoded.append("lang", langSelect.value);
 
         try {
           const response = await fetch(ENDPOINT_URL, {
