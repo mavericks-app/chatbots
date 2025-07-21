@@ -4,6 +4,7 @@ const express = require('express');
 // and fall back to the node-fetch package for older Node versions
 const fetch = global.fetch || require('node-fetch');
 const cors = require('cors');
+const path = require('path');
 
 async function handleFaqEntry(req, res) {
   const data = req.body || {};
@@ -26,6 +27,7 @@ async function handleFaqEntry(req, res) {
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname), { extensions: ['html'] }));
 
 app.get(['/proxy/inmovilla', '/api/proxy/inmovilla'], async (req, res) => {
   try {

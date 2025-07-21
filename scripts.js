@@ -1,9 +1,39 @@
 const chatbots = [
-  { name: "Chatbot FAQs", url: "chat_faqs.html", icon: "fa-circle-question", active: true },
-  { name: "Agente para Comprador", url: "chat_comprador.html", icon: "fa-house", active: true },
-  { name: "Agente para Vendedor", url: "chat_vendedor.html", icon: "fa-user-tie", active: false },
-  { name: "Agente para Inquilino", url: "chat_inquilino.html", icon: "fa-user", active: false },
-  { name: "Asistente Virtual", url: "chat_virtual.html", icon: "fa-robot", active: true }
+  {
+    name: "Chatbot FAQs",
+    slug: "faq",
+    file: "faq",
+    icon: "fa-circle-question",
+    active: true,
+  },
+  {
+    name: "Agente para Comprador",
+    slug: "comprador",
+    file: "comprador",
+    icon: "fa-house",
+    active: true,
+  },
+  {
+    name: "Agente para Vendedor",
+    slug: "vendedor",
+    file: "vendedor",
+    icon: "fa-user-tie",
+    active: false,
+  },
+  {
+    name: "Agente para Inquilino",
+    slug: "inquilino",
+    file: "inquilino",
+    icon: "fa-user",
+    active: false,
+  },
+  {
+    name: "Asistente Virtual",
+    slug: "virtual",
+    file: "virtual",
+    icon: "fa-robot",
+    active: true,
+  },
 ];
 
 function loadChatbotMenu() {
@@ -14,7 +44,9 @@ function loadChatbotMenu() {
   const botParam = params.get("bot");
   let initialIndex = 0;
   if (botParam) {
-    const found = chatbots.findIndex((b) => b.url === botParam);
+    const found = chatbots.findIndex(
+      (b) => b.slug === botParam || b.file === botParam
+    );
     if (found >= 0) initialIndex = found;
   }
 
@@ -33,15 +65,21 @@ function loadChatbotMenu() {
     button.innerHTML = `<i class="fa-solid ${bot.icon} icon"></i> ${bot.name}`;
     button.addEventListener("click", () => {
       if (!bot.active) return;
-      document.querySelectorAll(".chatbot-button.active").forEach(b => b.classList.remove("active"));
+      document
+        .querySelectorAll(".chatbot-button.active")
+        .forEach((b) => b.classList.remove("active"));
       button.classList.add("active");
-      if (frame) frame.src = bot.url;
+      if (frame) frame.src = bot.file;
       const params = new URLSearchParams(window.location.search);
-      params.set("bot", bot.url);
-      window.history.pushState({}, "", window.location.pathname + "?" + params.toString());
+      params.set("bot", bot.slug);
+      window.history.pushState(
+        {},
+        "",
+        window.location.pathname + "?" + params.toString()
+      );
     });
     if (index === initialIndex && frame && bot.active) {
-      frame.src = bot.url;
+      frame.src = bot.file;
       button.classList.add("active");
     }
     menuContainer.appendChild(button);
