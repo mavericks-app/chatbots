@@ -56,6 +56,18 @@
         border-bottom-color: rgba(255, 255, 255, 0.15);
         border-left-color: rgba(255, 255, 255, 0.15);
       }
+
+      /* ===== Icon hover effects ===== */
+      .hover-icon {
+        transition: transform 0.2s ease, color 0.2s ease;
+      }
+      .hover-icon:hover {
+        transform: scale(1.2);
+        color: #22c55e;
+      }
+      .dark .hover-icon:hover {
+        color: #86efac;
+      }
     </style>
   </head>
 
@@ -386,7 +398,7 @@ d.toLocaleTimeString("es-ES", {
         if (from === "bot") {
           const btn = document.createElement("button");
           btn.textContent = "🧠";
-          btn.className = "absolute top-1 right-1 text-lg";
+          btn.className = "absolute top-1 right-1 text-lg hover-icon";
           btn.title = "Mejorar IA";
           btn.addEventListener("click", () => openFaqModal(bubble));
           bubble.appendChild(btn);
@@ -404,7 +416,7 @@ d.toLocaleTimeString("es-ES", {
             let box;
             const icon = document.createElement("span");
             icon.textContent = iconText;
-            icon.className = "cursor-pointer select-none";
+            icon.className = "cursor-pointer select-none hover-icon";
             icon.addEventListener("click", () => {
               if (box) {
                 box.remove();
