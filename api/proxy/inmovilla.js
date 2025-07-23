@@ -14,11 +14,24 @@ export default async function handler(req, res) {
     options.body = JSON.stringify(req.body);
   }
   try {
+    const start = Date.now();
     const response = await fetch(target, options);
-    const data = await response.text();
-    res.status(response.status);
-    res.setHeader('content-type', response.headers.get('content-type') || 'text/plain');
-    res.end(data);
+    const durationMs = Date.now() - start;
+
+    const contentType = response.headers.get('content-type') || '';
+    let data;
+    if (contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
+
+    const peticion = { method, target, status: response.status, durationMs };
+    if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
+      res.status(response.status).json({ ...data, peticion });
+    } else {
+      res.status(response.status).json({ data, peticion });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al conectar con la API de Inmovilla' });
