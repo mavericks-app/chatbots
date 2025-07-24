@@ -407,23 +407,28 @@ d.toLocaleTimeString("es-ES", {
       function addMessage(text, from = "user", date = new Date(), save = true, query = null, json = null) {
         const bubble = document.createElement("div");
         const alignRight = from === "user";
-        bubble.className = `${alignRight ? "self-end bg-green-600 text-white" : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap relative`;
+        bubble.className = `${alignRight ? "self-end bg-green-600 text-white" : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap`;
         bubble.dataset.raw = text;
         bubble.dataset.from = from;
         appendTextOrImages(bubble, text);
 
+        const wrapper = document.createElement("div");
+        wrapper.className = "flex flex-col" + (alignRight ? " items-end" : " items-start");
+
+        const row = document.createElement("div");
+        row.className = "flex items-start gap-1" + (alignRight ? " justify-end" : "");
+        row.appendChild(bubble);
+
         if (from === "bot") {
           const btn = document.createElement("button");
           btn.textContent = "🧠";
-          btn.className = "absolute top-1 right-1 text-lg hover-icon";
+          btn.className = "text-lg hover-icon";
           btn.title = "Mejorar IA";
           btn.addEventListener("click", () => openFaqModal(bubble));
-          bubble.appendChild(btn);
+          row.appendChild(btn);
         }
 
-        const wrapper = document.createElement("div");
-        wrapper.className = "flex flex-col" + (alignRight ? " items-end" : " items-start");
-        wrapper.appendChild(bubble);
+        wrapper.appendChild(row);
 
         if (from === "bot" && (query || json)) {
           const icons = document.createElement("div");
@@ -495,7 +500,8 @@ d.toLocaleTimeString("es-ES", {
       function openFaqModal(bubble) {
         currentBubble = bubble;
         faqAnswer.value = bubble.dataset.raw || bubble.textContent;
-        const prev = findPreviousOtherText(bubble.parentElement, bubble.dataset.from);
+        const wrapper = bubble.parentElement?.parentElement || bubble.parentElement;
+        const prev = findPreviousOtherText(wrapper, bubble.dataset.from);
         faqQuestion.value = prev || "";
         faqModal.classList.remove("hidden");
       }
