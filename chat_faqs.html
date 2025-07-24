@@ -68,6 +68,15 @@
       .dark .hover-icon:hover {
         color: #86efac;
       }
+
+      /* ===== Header Selects ===== */
+      .header-select {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+      .header-select option {
+        color: black;
+      }
     </style>
   </head>
 
@@ -83,6 +92,11 @@
         <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"></select>
         <button id="renameUser" title="Renombrar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">✏️</button>
         <button id="deleteUser" title="Eliminar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">🗑️</button>
+        <label for="versionSelect" class="hidden sm:block text-sm text-white/80">Versión:</label>
+        <select id="versionSelect" class="header-select rounded-lg px-2 py-1 text-sm focus:outline-none">
+          <option value="v1">v1 (09/07/2025)</option>
+          <option value="v2"></option>
+        </select>
       </div>
     </header>
 
@@ -161,9 +175,11 @@
     <script src="voice.js"></script>
     <script>
       /******************** 1. ENDPOINTS ************************/
-      const PROD_ENDPOINT = "https://n8n.srv911672.hstgr.cloud/webhook/2764b1cc-570d-4003-827f-7931b73a2b02";
-      const TEST_ENDPOINT = "https://n8n.srv911672.hstgr.cloud/webhook-test/2764b1cc-570d-4003-827f-7931b73a2b02";
-      let ENDPOINT_URL = PROD_ENDPOINT; // cambia a TEST_ENDPOINT si lo necesitas
+      const ENDPOINTS = {
+        v1: "https://n8n.srv911672.hstgr.cloud/webhook/v1/agente_faqs",
+        v2: "https://n8n.srv911672.hstgr.cloud/webhook/v2/agente_faqs"
+      };
+      let ENDPOINT_URL = ENDPOINTS.v1;
       // La llamada para guardar FAQs se realiza desde backend para evitar CORS
       const FAQ_SAVE_ENDPOINT = "/api/faq-entry";
 
@@ -190,6 +206,7 @@
       const renameBtn = document.getElementById("renameUser");
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
+      const versionSelect = document.getElementById("versionSelect");
       const faqModal = document.getElementById("faqModal");
       const faqQuestion = document.getElementById("faqQuestion");
       const faqQuestionVoice = document.getElementById("faqQuestionVoice");
@@ -601,6 +618,10 @@ d.toLocaleTimeString("es-ES", {
         resetConversationState();
       });
 
+      versionSelect.addEventListener("change", () => {
+        ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+      });
+
       faqCancel.addEventListener("click", closeFaqModal);
 
       faqOk.addEventListener("click", async () => {
@@ -638,6 +659,11 @@ d.toLocaleTimeString("es-ES", {
       /******************** 11. INIT ************************/
       function init() {
         initTheme();
+        const v2Opt = versionSelect.querySelector("option[value=\"v2\"]");
+        const today = new Date().toLocaleDateString("es-ES");
+        v2Opt.textContent = `v2 (${today}) [en desarrollo]`;
+        versionSelect.value = "v1";
+        ENDPOINT_URL = ENDPOINTS[versionSelect.value];
         ensureAtLeastOneUser();
         renderUserOptions();
         userSelect.value = loadUsers()[0].id;
