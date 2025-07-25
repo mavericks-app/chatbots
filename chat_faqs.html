@@ -97,6 +97,10 @@
           <option value="v1">v1 (09/07/2025)</option>
           <option value="v2"></option>
         </select>
+        <label for="idAgente" class="hidden sm:block text-sm text-white/80">ID Agente:</label>
+        <input id="idAgente" type="text" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+        <label for="idAgencia" class="hidden sm:block text-sm text-white/80">ID Agencia:</label>
+        <input id="idAgencia" type="text" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
       </div>
     </header>
 
@@ -189,6 +193,7 @@
       const USERS_KEY = "faqUsers";
       const HISTORY_PREFIX = "faqChat_";
       const THEME_KEY = "faqTheme";
+      const AGENT_INFO_PREFIX = "faqAgentInfo_";
 
       function generateUserId() {
         const arr = new Uint8Array(16);
@@ -207,6 +212,8 @@
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
       const versionSelect = document.getElementById("versionSelect");
+      const idAgenteInput = document.getElementById("idAgente");
+      const idAgenciaInput = document.getElementById("idAgencia");
       const faqModal = document.getElementById("faqModal");
       const faqQuestion = document.getElementById("faqQuestion");
       const faqQuestionVoice = document.getElementById("faqQuestionVoice");
@@ -324,6 +331,7 @@
         let users = loadUsers().filter((u) => u.id !== currentId);
         saveUsers(users);
         localStorage.removeItem(HISTORY_PREFIX + currentId);
+        localStorage.removeItem(AGENT_INFO_PREFIX + currentId);
         ensureAtLeastOneUser();
         renderUserOptions();
         userSelect.value = loadUsers()[0].id;
@@ -353,6 +361,41 @@
         const hist = loadHistory(userId);
         hist.forEach((msg) => addMessage(msg.text, msg.from, new Date(msg.ts), false));
         chatBox.scrollTop = chatBox.scrollHeight;
+        renderAgentInfo(userId);
+      }
+
+      /******************** 7b. AGENT INFO ************************/
+      function saveAgentInfo(userId, info) {
+        localStorage.setItem(AGENT_INFO_PREFIX + userId, JSON.stringify(info));
+      }
+
+      function loadAgentInfo(userId) {
+        try {
+          return (
+            JSON.parse(localStorage.getItem(AGENT_INFO_PREFIX + userId)) || {
+              idagente: "",
+              idagencia: "",
+            }
+          );
+        } catch {
+          return { idagente: "", idagencia: "" };
+        }
+      }
+
+      function updateAgentInputState() {
+        const hasHistory = loadHistory(userSelect.value).length > 0;
+        [idAgenteInput, idAgenciaInput].forEach((el) => {
+          el.disabled = hasHistory;
+          el.classList.toggle("opacity-40", hasHistory);
+          el.classList.toggle("cursor-not-allowed", hasHistory);
+        });
+      }
+
+      function renderAgentInfo(userId) {
+        const info = loadAgentInfo(userId);
+        idAgenteInput.value = info.idagente || "";
+        idAgenciaInput.value = info.idagencia || "";
+        updateAgentInputState();
       }
 
       /******************** 8. CHAT UI HELPERS ************************/
@@ -542,6 +585,8 @@ d.toLocaleTimeString("es-ES", {
         const urlencoded = new URLSearchParams();
         urlencoded.append("question", payload);
         urlencoded.append("user_key", userSelect.value);
+        urlencoded.append("idagente", idAgenteInput.value);
+        urlencoded.append("idagencia", idAgenciaInput.value);
 
         try {
           const response = await fetch(ENDPOINT_URL, {
@@ -586,7 +631,9 @@ d.toLocaleTimeString("es-ES", {
         if (!text) return;
         textarea.value = "";
         textarea.style.height = "auto";
+        const wasEmpty = loadHistory(userSelect.value).length === 0;
         addMessage(text, "user");
+        if (wasEmpty) updateAgentInputState();
 
         if (awaitingResponse) {
           // Estamos esperando: cancelar y concatenar
@@ -622,10 +669,20 @@ d.toLocaleTimeString("es-ES", {
         saveHistory(userId, []);
         chatBox.innerHTML = "";
         resetConversationState();
+        updateAgentInputState();
       });
 
       versionSelect.addEventListener("change", () => {
         ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+      });
+
+      [idAgenteInput, idAgenciaInput].forEach((el) => {
+        el.addEventListener("input", () => {
+          saveAgentInfo(userSelect.value, {
+            idagente: idAgenteInput.value,
+            idagencia: idAgenciaInput.value,
+          });
+        });
       });
 
       faqCancel.addEventListener("click", closeFaqModal);
