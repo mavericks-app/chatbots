@@ -97,24 +97,26 @@
           <option value="v1">v1 (09/07/2025)</option>
           <option value="v2"></option>
         </select>
-        <label for="idAgente" class="hidden sm:block text-sm text-white/80">ID Agente:</label>
-        <input
-          id="idAgente"
-          type="text"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          maxlength="8"
-          class="w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"
-        />
-        <label for="idAgencia" class="hidden sm:block text-sm text-white/80">ID Agencia:</label>
-        <input
-          id="idAgencia"
-          type="text"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          maxlength="8"
-          class="w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"
-        />
+        <span id="agentFields" class="hidden items-center gap-2">
+          <label for="idAgente" class="hidden sm:block text-sm text-white/80">ID Agente:</label>
+          <input
+            id="idAgente"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="8"
+            class="w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"
+          />
+          <label for="idAgencia" class="hidden sm:block text-sm text-white/80">ID Agencia:</label>
+          <input
+            id="idAgencia"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="8"
+            class="w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"
+          />
+        </span>
       </div>
     </header>
 
@@ -226,6 +228,7 @@
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
       const versionSelect = document.getElementById("versionSelect");
+      const agentFields = document.getElementById("agentFields");
       const idAgenteInput = document.getElementById("idAgente");
       const idAgenciaInput = document.getElementById("idAgencia");
       const faqModal = document.getElementById("faqModal");
@@ -397,6 +400,9 @@
       }
 
       function updateAgentInputState() {
+        const isV2 = versionSelect.value === "v2";
+        agentFields.classList.toggle("hidden", !isV2);
+        if (!isV2) return;
         const hasHistory = loadHistory(userSelect.value).length > 0;
         [idAgenteInput, idAgenciaInput].forEach((el) => {
           el.disabled = hasHistory;
@@ -599,8 +605,10 @@ d.toLocaleTimeString("es-ES", {
         const urlencoded = new URLSearchParams();
         urlencoded.append("question", payload);
         urlencoded.append("user_key", userSelect.value);
-        urlencoded.append("idagente", idAgenteInput.value);
-        urlencoded.append("idagencia", idAgenciaInput.value);
+        if (versionSelect.value === "v2") {
+          urlencoded.append("idagente", idAgenteInput.value);
+          urlencoded.append("idagencia", idAgenciaInput.value);
+        }
 
         try {
           const response = await fetch(ENDPOINT_URL, {
@@ -688,6 +696,7 @@ d.toLocaleTimeString("es-ES", {
 
       versionSelect.addEventListener("change", () => {
         ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+        updateAgentInputState();
       });
 
       [idAgenteInput, idAgenciaInput].forEach((el) => {
