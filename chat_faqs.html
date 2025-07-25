@@ -98,9 +98,23 @@
           <option value="v2"></option>
         </select>
         <label for="idAgente" class="hidden sm:block text-sm text-white/80">ID Agente:</label>
-        <input id="idAgente" type="text" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+        <input
+          id="idAgente"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="8"
+          class="w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"
+        />
         <label for="idAgencia" class="hidden sm:block text-sm text-white/80">ID Agencia:</label>
-        <input id="idAgencia" type="text" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+        <input
+          id="idAgencia"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="8"
+          class="w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"
+        />
       </div>
     </header>
 
