@@ -40,6 +40,8 @@
       </select>
       <span id="currentEndpoint" class="text-xs text-white/80 break-all"></span>
       <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+      <label for="userIdInput" class="text-sm text-white/80">ID:</label>
+      <input id="userIdInput" type="text" placeholder="ID usuario" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none w-28" />
       <label class="text-sm text-white/80 flex items-center gap-1" title="Enviar conversaciones en modo debug">
         <input id="debugToggle" type="checkbox" class="text-gray-900" />
         Debug
@@ -73,10 +75,12 @@
     const ENDPOINT_STORAGE_KEY = 'virtualEndpoint';
     const TOKEN_STORAGE_KEY = 'virtualToken';
     const DEBUG_STORAGE_KEY = 'virtualDebug';
+    const USERID_STORAGE_KEY = 'virtualUserId';
 
     const endpointSelect = document.getElementById('endpointSelect');
     const endpointDisplay = document.getElementById('currentEndpoint');
     const tokenInput = document.getElementById('tokenInput');
+    const userIdInput = document.getElementById('userIdInput');
     const debugToggle = document.getElementById('debugToggle');
     const chatBox = document.getElementById('chat');
     const textarea = document.getElementById('message');
@@ -92,6 +96,7 @@
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
     tokenInput.value = localStorage.getItem(TOKEN_STORAGE_KEY) || '';
+    userIdInput.value = localStorage.getItem(USERID_STORAGE_KEY) || '33';
     debugToggle.checked = localStorage.getItem(DEBUG_STORAGE_KEY) === '1';
     endpointDisplay.textContent = endpointSelect.value;
 
@@ -117,6 +122,9 @@
 
     tokenInput.addEventListener('input', () => {
       localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value);
+    });
+    userIdInput.addEventListener('input', () => {
+      localStorage.setItem(USERID_STORAGE_KEY, userIdInput.value);
     });
 
     function openModal(content, type) {
@@ -253,7 +261,7 @@
       const token = tokenInput.value.trim();
       if (token) headers['Authorization'] = 'Bearer ' + token;
       const body = {
-        fromUser: 33,
+        fromUser: userIdInput.value || '33',
         toUser: 225130,
         agencyId: 6713,
         fromAgencyId: 413,
