@@ -285,38 +285,59 @@
         });
       }
 
-      function changeActiveUser(id) {
-        if (id === "new") {
-          const name = prompt("Nombre del nuevo usuario:");
-          if (!name) {
-            userSelect.value = loadUsers()[0].id; // restaurar selección previa
-            return;
+        function changeActiveUser(id) {
+          if (id === "new") {
+            const name = prompt("Nombre del nuevo usuario:");
+            if (!name) {
+              userSelect.value = loadUsers()[0].id; // restaurar selección previa
+              return;
+            }
+            const users = loadUsers();
+            let newId = generateUserId();
+            const customId = prompt("ID del nuevo usuario:", newId);
+            if (customId) newId = customId.trim();
+            if (users.some((u) => u.id === newId)) {
+              alert("Ya existe un usuario con ese ID.");
+              userSelect.value = loadUsers()[0].id;
+              return;
+            }
+            users.push({ id: newId, name });
+            saveUsers(users);
+            renderUserOptions();
+            userSelect.value = newId;
+            id = newId;
           }
-          const users = loadUsers();
-          const newId = generateUserId();
-          users.push({ id: newId, name });
-          saveUsers(users);
-          renderUserOptions();
-          userSelect.value = newId;
-          id = newId;
-        }
         loadHistoryIntoChat(id);
         resetConversationState();
         disableUserButtons(false);
       }
 
-      renameBtn.addEventListener("click", () => {
-        const currentId = userSelect.value;
-        const users = loadUsers();
-        const idx = users.findIndex((u) => u.id === currentId);
-        if (idx === -1) return;
-        const newName = prompt("Nuevo nombre:", users[idx].name);
-        if (!newName) return;
-        users[idx].name = newName;
-        saveUsers(users);
-        renderUserOptions();
-        userSelect.value = currentId;
-      });
+        renameBtn.addEventListener("click", () => {
+          const currentId = userSelect.value;
+          const users = loadUsers();
+          const idx = users.findIndex((u) => u.id === currentId);
+          if (idx === -1) return;
+          const newName = prompt("Nuevo nombre:", users[idx].name);
+          if (!newName) return;
+          let newId = prompt("Nuevo ID:", currentId) || currentId;
+          newId = newId.trim();
+          if (newId !== currentId && users.some((u) => u.id === newId)) {
+            alert("Ya existe un usuario con ese ID.");
+            return;
+          }
+          if (newId !== currentId) {
+            const hist = loadHistory(currentId);
+            localStorage.setItem(
+              HISTORY_PREFIX + newId,
+              JSON.stringify(hist)
+            );
+            localStorage.removeItem(HISTORY_PREFIX + currentId);
+          }
+          users[idx] = { id: newId, name: newName };
+          saveUsers(users);
+          renderUserOptions();
+          userSelect.value = newId;
+        });
 
       deleteBtn.addEventListener("click", () => {
         const currentId = userSelect.value;
