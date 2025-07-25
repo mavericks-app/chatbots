@@ -12,10 +12,17 @@ function loadChatbotMenu() {
 
   const params = new URLSearchParams(window.location.search);
   const botParam = params.get("bot");
-  let initialIndex = 0;
+  const homePage = "home.html";
+  let initialIndex = -1;
   if (botParam) {
-    const found = chatbots.findIndex((b) => b.url === botParam);
-    if (found >= 0) initialIndex = found;
+    const found = chatbots.findIndex((b) => b.url === botParam && b.active);
+    if (found >= 0) {
+      initialIndex = found;
+    } else if (frame) {
+      frame.src = homePage;
+    }
+  } else if (frame) {
+    frame.src = homePage;
   }
 
   if (!menuContainer) {

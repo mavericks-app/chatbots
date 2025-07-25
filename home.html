@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienvenido</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root { --primary: #10b981; --primary-hover: #059669; --bg: #f0f4f8; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 32px;
+      position: relative;
+    }
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      transform: translateX(-50%);
+      border-radius: 2px;
+      animation: slide 2s infinite;
+    }
+    @keyframes slide { 0%{width:0;} 50%{width:60px;} 100%{width:0;} }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
+    .card i {
+      font-size: 26px;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+    .card:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .card-desc {
+      font-size: 14px;
+      margin: 0;
+      color: #555;
+    }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div style="width:100%;max-width:900px;">
+    <h1>Selecciona un Chatbot</h1>
+    <div class="cards">
+      <a href="index.html?bot=chat_faqs.html" target="_parent" class="card" style="animation-delay:0.1s">
+        <i class="fa-solid fa-circle-question"></i>
+        <div>
+          <p class="card-title">Chatbot FAQs</p>
+          <p class="card-desc">Resuelve tus dudas frecuentes al instante.</p>
+        </div>
+      </a>
+      <a href="index.html?bot=chat_comprador.html" target="_parent" class="card" style="animation-delay:0.2s">
+        <i class="fa-solid fa-house"></i>
+        <div>
+          <p class="card-title">Agente para Comprador</p>
+          <p class="card-desc">Encuentra tu hogar ideal con ayuda experta.</p>
+        </div>
+      </a>
+      <a href="index.html?bot=chat_virtual.html" target="_parent" class="card" style="animation-delay:0.3s">
+        <i class="fa-solid fa-robot"></i>
+        <div>
+          <p class="card-title">Asistente Virtual</p>
+          <p class="card-desc">Interactúa con nuestro asistente digital en vivo.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.style.animationDelay = `${0.1 + i * 0.1}s`;
+    });
+  </script>
+</body>
+</html>
