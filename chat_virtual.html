@@ -189,7 +189,7 @@
     function addMessage(text, from = 'user', query = null, json = null, error = null) {
       const bubble = document.createElement('div');
       const alignRight = from === 'user';
-      bubble.className = `${alignRight ? 'self-end bg-green-600 text-white' : 'bg-white text-gray-900'} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[90%] whitespace-pre-wrap`;
+      bubble.className = `${alignRight ? 'self-end bg-green-600 text-white' : 'bg-white text-gray-900'} rounded-2xl py-2 px-4 shadow-md inline-block max-w-[calc(100%-3rem)] whitespace-pre-line break-words`;
       appendTextOrImages(bubble, text);
 
       const wrapper = document.createElement('div');
