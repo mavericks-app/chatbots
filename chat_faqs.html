@@ -514,7 +514,7 @@ d.toLocaleTimeString("es-ES", {
       function findPreviousOtherText(wrapper, from) {
         let el = wrapper.previousElementSibling;
         while (el) {
-          const b = el.querySelector("div");
+          const b = el.querySelector("div[data-from]");
           if (b && b.dataset.from && b.dataset.from !== from) {
             return b.dataset.raw || b.textContent;
           }
