@@ -169,7 +169,6 @@
         <button id="voice" title="Hablar" class="absolute right-3 top-1/2 -translate-y-1/2 text-xl text-gray-500 hover:text-gray-300 dark:hover:text-gray-200">🎙️</button>
       </div>
       <button id="send" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-5 py-3 font-medium shadow-md">Enviar</button>
-      <button id="reset" class="bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-700/60 dark:hover:bg-red-700 dark:text-red-100 rounded-xl px-5 py-3 font-medium shadow-md">Reset</button>
     </footer>
 
     <!-- ============ SCRIPT ============ -->
@@ -202,7 +201,6 @@
       const textarea = document.getElementById("message");
       const sendBtn = document.getElementById("send");
       const voiceBtn = document.getElementById("voice");
-      const resetBtn = document.getElementById("reset");
       const userSelect = document.getElementById("userSelect");
       const renameBtn = document.getElementById("renameUser");
       const deleteBtn = document.getElementById("deleteUser");
@@ -615,14 +613,6 @@ d.toLocaleTimeString("es-ES", {
       textarea.addEventListener("input", () => {
         textarea.style.height = "auto";
         textarea.style.height = textarea.scrollHeight + "px";
-      });
-
-      resetBtn.addEventListener("click", () => {
-        if (!confirm("¿Vaciar la conversación de este usuario?")) return;
-        const userId = userSelect.value;
-        saveHistory(userId, []);
-        chatBox.innerHTML = "";
-        resetConversationState();
       });
 
       versionSelect.addEventListener("change", () => {
