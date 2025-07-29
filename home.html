@@ -68,6 +68,11 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       transform: translateY(-2px);
     }
+    .card.inactive {
+      opacity: 0.6;
+      pointer-events: none;
+      cursor: default;
+    }
     .card-title {
       font-size: 18px;
       font-weight: 600;
@@ -87,25 +92,39 @@
   <div style="width:100%;max-width:900px;">
     <h1>Selecciona un Chatbot</h1>
     <div class="cards">
-      <a href="index.html?bot=chat_faqs.html" target="_parent" class="card" style="animation-delay:0.1s">
+      <a href="index.html?bot=chat_faqs.html" target="_parent" class="card">
         <i class="fa-solid fa-circle-question"></i>
         <div>
           <p class="card-title">Chatbot FAQs</p>
-          <p class="card-desc">Resuelve tus dudas frecuentes al instante.</p>
+          <p class="card-desc">Resuelve tus dudas frecuentes al instante, usa de fuente de datos las FAQs de Inmovilla.</p>
         </div>
       </a>
-      <a href="index.html?bot=chat_comprador.html" target="_parent" class="card" style="animation-delay:0.2s">
+      <div class="card inactive">
         <i class="fa-solid fa-house"></i>
         <div>
           <p class="card-title">Agente para Comprador</p>
           <p class="card-desc">Encuentra tu hogar ideal con ayuda experta.</p>
         </div>
-      </a>
-      <a href="index.html?bot=chat_virtual.html" target="_parent" class="card" style="animation-delay:0.3s">
+      </div>
+      <div class="card inactive">
+        <i class="fa-solid fa-user-tie"></i>
+        <div>
+          <p class="card-title">Agente para Vendedor</p>
+          <p class="card-desc">Próximamente.</p>
+        </div>
+      </div>
+      <div class="card inactive">
+        <i class="fa-solid fa-user"></i>
+        <div>
+          <p class="card-title">Agente para Inquilino</p>
+          <p class="card-desc">Próximamente.</p>
+        </div>
+      </div>
+      <a href="index.html?bot=chat_virtual.html" target="_parent" class="card">
         <i class="fa-solid fa-robot"></i>
         <div>
           <p class="card-title">Asistente Virtual</p>
-          <p class="card-desc">Interactúa con nuestro asistente digital en vivo.</p>
+          <p class="card-desc">Interactúa con el asistente virtual de Inmovilla, se nutre de la información del usuario de Inmovilla del token que le añadas.</p>
         </div>
       </a>
     </div>
