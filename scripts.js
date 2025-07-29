@@ -1,10 +1,10 @@
 const chatbots = [
   { name: "Home", url: "home.html", icon: "fa-home", active: true },
   { name: "Chatbot FAQs", url: "chat_faqs.html", icon: "fa-circle-question", active: true },
+  { name: "Asistente Virtual", url: "chat_virtual.html", icon: "fa-robot", active: true },
   { name: "Agente para Comprador", url: "chat_comprador.html", icon: "fa-house", active: false },
   { name: "Agente para Vendedor", url: "chat_vendedor.html", icon: "fa-user-tie", active: false },
-  { name: "Agente para Inquilino", url: "chat_inquilino.html", icon: "fa-user", active: false },
-  { name: "Asistente Virtual", url: "chat_virtual.html", icon: "fa-robot", active: true }
+  { name: "Agente para Inquilino", url: "chat_inquilino.html", icon: "fa-user", active: false }
 ];
 
 function loadChatbotMenu() {
