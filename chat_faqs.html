@@ -94,8 +94,8 @@
         <button id="deleteUser" title="Eliminar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">🗑️</button>
         <label for="versionSelect" class="hidden sm:block text-sm text-white/80">Versión:</label>
         <select id="versionSelect" class="header-select rounded-lg px-2 py-1 text-sm focus:outline-none">
-          <option value="v1">v1 (09/07/2025)</option>
-          <option value="v2"></option>
+          <option value="v1">v1: anonymous</option>
+          <option value="v2">v2: user context</option>
         </select>
       </div>
     </header>
@@ -666,8 +666,7 @@ d.toLocaleTimeString("es-ES", {
       function init() {
         initTheme();
         const v2Opt = versionSelect.querySelector("option[value=\"v2\"]");
-        const today = new Date().toLocaleDateString("es-ES");
-        v2Opt.textContent = `v2 (${today}) [en desarrollo]`;
+        v2Opt.textContent = "v2: user context";
         versionSelect.value = "v1";
         ENDPOINT_URL = ENDPOINTS[versionSelect.value];
         ensureAtLeastOneUser();
