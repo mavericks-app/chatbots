@@ -28,7 +28,7 @@ async function testApi() {
 
     assert.strictEqual(res.status, 200);
     assert.strictEqual(text, 'ok');
-    assert.strictEqual(capturedArgs[0], 'https://procesos.inmovilla.com/peticionesexternas/chatbot/postFaqRapida.php');
+    assert.strictEqual(capturedArgs[0], 'https://procesos.inmovilla.com/peticionesexternas/chatbot/n8n/postFaqRapida.php');
     assert.strictEqual(capturedArgs[1].method, 'POST');
     console.log('✓ POST /api/faq-entry');
   } finally {

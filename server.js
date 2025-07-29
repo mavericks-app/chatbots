@@ -8,7 +8,7 @@ const cors = require('cors');
 async function handleFaqEntry(req, res) {
   const data = req.body || {};
   try {
-    const response = await fetch('https://procesos.inmovilla.com/peticionesexternas/chatbot/postFaqRapida.php', {
+    const response = await fetch('https://procesos.inmovilla.com/peticionesexternas/chatbot/n8n/postFaqRapida.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
