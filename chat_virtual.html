@@ -40,6 +40,8 @@
       </select>
       <span id="currentEndpoint" class="text-xs text-white/80 break-all"></span>
       <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+      <input id="fromUserInput" type="number" value="33" placeholder="fromUser" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-24 focus:outline-none" />
+      <input id="fromAgencyIdInput" type="number" value="413" placeholder="fromAgencyId" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-28 focus:outline-none" />
       <label class="text-sm text-white/80 flex items-center gap-1" title="Enviar conversaciones en modo debug">
         <input id="debugToggle" type="checkbox" class="text-gray-900" />
         Debug
@@ -77,6 +79,8 @@
     const endpointSelect = document.getElementById('endpointSelect');
     const endpointDisplay = document.getElementById('currentEndpoint');
     const tokenInput = document.getElementById('tokenInput');
+    const fromUserInput = document.getElementById('fromUserInput');
+    const fromAgencyIdInput = document.getElementById('fromAgencyIdInput');
     const debugToggle = document.getElementById('debugToggle');
     const chatBox = document.getElementById('chat');
     const textarea = document.getElementById('message');
@@ -88,6 +92,7 @@
     const copyParamsBtn = document.getElementById('copyParamsBtn');
     let modalContent = '';
     let modalType = '';
+    let chatStarted = false;
     attachVoiceInput(textarea, voiceBtn);
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
@@ -249,14 +254,20 @@
       addMessage(text, 'user');
       addSpinner();
 
+      if (!chatStarted) {
+        fromUserInput.disabled = true;
+        fromAgencyIdInput.disabled = true;
+        chatStarted = true;
+      }
+
       const headers = { 'Content-Type': 'application/json' };
       const token = tokenInput.value.trim();
       if (token) headers['Authorization'] = 'Bearer ' + token;
       const body = {
-        fromUser: 33,
+        fromUser: parseInt(fromUserInput.value, 10),
         toUser: 225130,
         agencyId: 6713,
-        fromAgencyId: 413,
+        fromAgencyId: parseInt(fromAgencyIdInput.value, 10),
         message: text
       };
 
