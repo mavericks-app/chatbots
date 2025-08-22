@@ -29,30 +29,40 @@
   </style>
 </head>
 <body class="h-screen flex flex-col font-sans bg-[#f4f6f8]">
-  <header class="bg-green-600 text-white flex items-center justify-between px-4 py-3 shadow-md gap-2 flex-wrap">
-    <h1 class="text-lg font-semibold tracking-wide select-none">Asistente Virtual</h1>
-    <div class="flex items-center gap-2 flex-wrap">
-      <label for="endpointSelect" class="text-sm text-white/80">Entorno:</label>
-      <select id="endpointSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
-        <option value="https://api.inmovilla.com/v3/bot/test">Producci&oacute;n</option>
-        <option value="https://test.inmovilla.com/v3/bot/test">Test</option>
-        <option value="http://localhost/app/api/v2/bot/test">Localhost</option>
-      </select>
-      <span id="currentEndpoint" class="text-xs text-white/80 break-all"></span>
-      <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
-      <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
-        <option value="ghiloni" data-user="33" data-agency="413">Ghiloni</option>
-        <option value="jorge" data-user="43" data-agency="554">Jorge</option>
-        <option value="otro" data-user="" data-agency="">Otro...</option>
-      </select>
-      <input id="fromUserInput" type="number" placeholder="fromUser" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-24 focus:outline-none" />
-      <input id="fromAgencyIdInput" type="number" placeholder="fromAgencyId" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-32 focus:outline-none" />
-      <span class="w-full text-xs text-white/80">El user y agencia deben ser los mismos que los del token jwt que se añada.</span>
-      <label class="text-sm text-white/80 flex items-center gap-1" title="Enviar conversaciones en modo debug">
+  <header class="bg-green-600 text-white px-4 py-3 shadow-md">
+    <h1 class="text-lg font-semibold tracking-wide select-none mb-3">Asistente Virtual</h1>
+    <div class="flex flex-wrap items-end gap-4 text-sm">
+      <div class="flex flex-col">
+        <label for="endpointSelect" class="text-white/80 text-xs">Entorno</label>
+        <select id="endpointSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
+          <option value="https://api.inmovilla.com/v3/bot/test">Producción</option>
+          <option value="https://test.inmovilla.com/v3/bot/test">Test</option>
+          <option value="http://localhost/app/api/v2/bot/test">Localhost</option>
+        </select>
+        <span id="currentEndpoint" class="text-[10px] text-white/80 break-all mt-0.5"></span>
+      </div>
+      <div class="flex flex-col">
+        <label for="tokenInput" class="text-white/80 text-xs">JWT Token</label>
+        <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none w-48" />
+      </div>
+      <div class="flex flex-col">
+        <label for="userSelect" class="text-white/80 text-xs">Remitente</label>
+        <div class="flex items-center gap-2">
+          <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
+            <option value="ghiloni" data-user="33" data-agency="413">Ghiloni</option>
+            <option value="jorge" data-user="43" data-agency="554">Jorge</option>
+            <option value="otro" data-user="" data-agency="">Otro...</option>
+          </select>
+          <input id="fromUserInput" type="number" placeholder="fromUser" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-20 focus:outline-none" />
+          <input id="fromAgencyIdInput" type="number" placeholder="fromAgencyId" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-24 focus:outline-none" />
+        </div>
+      </div>
+      <div class="flex items-center gap-1 mt-4 sm:mt-0">
         <input id="debugToggle" type="checkbox" class="text-gray-900" />
-        Debug
-      </label>
-      <span class="text-white/80 cursor-help" title="Para obtener el JWT, accede al CRM, inicia sesi&oacute;n, abre el inspector de Chrome, ve a Aplicaci&oacute;n y copia la cookie llamada 'jwt'.">&#9432;</span>
+        <label for="debugToggle" class="text-white/80">Debug</label>
+        <span class="text-white/80 cursor-help" title="Para obtener el JWT, accede al CRM, inicia sesión, abre el inspector de Chrome, ve a Aplicación y copia la cookie llamada 'jwt'.">&#9432;</span>
+      </div>
+      <span class="w-full text-xs text-white/80">El user y agencia deben ser los mismos que los del token jwt que se añada.</span>
     </div>
   </header>
 
