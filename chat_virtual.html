@@ -29,9 +29,9 @@
   </style>
 </head>
 <body class="h-screen flex flex-col font-sans bg-[#f4f6f8]">
-  <header class="bg-green-600 text-white px-4 py-3 shadow-md">
-    <h1 class="text-lg font-semibold tracking-wide select-none mb-3">Asistente Virtual</h1>
-    <div class="flex flex-wrap items-end gap-4 text-sm">
+  <header class="bg-green-600 text-white px-4 py-4 shadow-md">
+    <h1 class="text-lg font-semibold tracking-wide select-none mb-4">Asistente Virtual</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm items-end">
       <div class="flex flex-col">
         <label for="endpointSelect" class="text-white/80 text-xs">Entorno</label>
         <select id="endpointSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
@@ -43,26 +43,26 @@
       </div>
       <div class="flex flex-col">
         <label for="tokenInput" class="text-white/80 text-xs">JWT Token</label>
-        <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none w-48" />
+        <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none w-full md:w-56" />
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col md:col-span-2 lg:col-span-2">
         <label for="userSelect" class="text-white/80 text-xs">Remitente</label>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
             <option value="ghiloni" data-user="33" data-agency="413">Ghiloni</option>
             <option value="jorge" data-user="43" data-agency="554">Jorge</option>
             <option value="otro" data-user="" data-agency="">Otro...</option>
           </select>
-          <input id="fromUserInput" type="number" placeholder="fromUser" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-20 focus:outline-none" />
+          <input id="fromUserInput" type="number" placeholder="fromUser" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-24 focus:outline-none" />
           <input id="fromAgencyIdInput" type="number" placeholder="fromAgencyId" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-24 focus:outline-none" />
         </div>
       </div>
-      <div class="flex items-center gap-1 mt-4 sm:mt-0">
+      <div class="flex items-center gap-1 self-end">
         <input id="debugToggle" type="checkbox" class="text-gray-900" />
         <label for="debugToggle" class="text-white/80">Debug</label>
         <span class="text-white/80 cursor-help" title="Para obtener el JWT, accede al CRM, inicia sesión, abre el inspector de Chrome, ve a Aplicación y copia la cookie llamada 'jwt'.">&#9432;</span>
       </div>
-      <span class="w-full text-xs text-white/80">El user y agencia deben ser los mismos que los del token jwt que se añada.</span>
+      <span class="md:col-span-2 lg:col-span-4 text-xs text-white/80">El user y agencia deben ser los mismos que los del token jwt que se añada.</span>
     </div>
   </header>
 
