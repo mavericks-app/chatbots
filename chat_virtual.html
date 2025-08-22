@@ -40,6 +40,14 @@
       </select>
       <span id="currentEndpoint" class="text-xs text-white/80 break-all"></span>
       <input id="tokenInput" type="text" placeholder="JWT Token" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none" />
+      <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
+        <option value="ghiloni" data-user="33" data-agency="413">Ghiloni</option>
+        <option value="jorge" data-user="43" data-agency="554">Jorge</option>
+        <option value="otro" data-user="" data-agency="">Otro...</option>
+      </select>
+      <input id="fromUserInput" type="number" placeholder="fromUser" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-24 focus:outline-none" />
+      <input id="fromAgencyIdInput" type="number" placeholder="fromAgencyId" class="text-gray-900 rounded-lg px-2 py-1 text-sm w-32 focus:outline-none" />
+      <span class="w-full text-xs text-white/80">El user y agencia deben ser los mismos que los del token jwt que se añada.</span>
       <label class="text-sm text-white/80 flex items-center gap-1" title="Enviar conversaciones en modo debug">
         <input id="debugToggle" type="checkbox" class="text-gray-900" />
         Debug
@@ -78,6 +86,9 @@
     const endpointDisplay = document.getElementById('currentEndpoint');
     const tokenInput = document.getElementById('tokenInput');
     const debugToggle = document.getElementById('debugToggle');
+    const userSelect = document.getElementById('userSelect');
+    const fromUserInput = document.getElementById('fromUserInput');
+    const fromAgencyInput = document.getElementById('fromAgencyIdInput');
     const chatBox = document.getElementById('chat');
     const textarea = document.getElementById('message');
     const sendBtn = document.getElementById('send');
@@ -118,6 +129,20 @@
     tokenInput.addEventListener('input', () => {
       localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value);
     });
+
+    function updateUserFields() {
+      const option = userSelect.options[userSelect.selectedIndex];
+      const user = option.getAttribute('data-user') || '';
+      const agency = option.getAttribute('data-agency') || '';
+      fromUserInput.value = user;
+      fromAgencyInput.value = agency;
+      const editable = option.value === 'otro';
+      fromUserInput.readOnly = !editable;
+      fromAgencyInput.readOnly = !editable;
+    }
+
+    userSelect.addEventListener('change', updateUserFields);
+    updateUserFields();
 
     function openModal(content, type) {
       modalType = type || '';
@@ -253,10 +278,10 @@
       const token = tokenInput.value.trim();
       if (token) headers['Authorization'] = 'Bearer ' + token;
       const body = {
-        fromUser: 33,
+        fromUser: Number(fromUserInput.value),
         toUser: 225130,
         agencyId: 6713,
-        fromAgencyId: 413,
+        fromAgencyId: Number(fromAgencyInput.value),
         message: text
       };
 
