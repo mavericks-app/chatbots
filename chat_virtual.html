@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="flex items-center gap-1 ml-auto">
-        <input id="debugToggle" type="checkbox" class="text-gray-900" />
+        <input id="debugToggle" type="checkbox" class="text-gray-900" checked />
         <label for="debugToggle" class="text-white/80">Debug</label>
       </div>
     </div>
@@ -115,7 +115,13 @@
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
     tokenInput.value = localStorage.getItem(TOKEN_STORAGE_KEY) || '';
-    debugToggle.checked = localStorage.getItem(DEBUG_STORAGE_KEY) === '1';
+    const storedDebug = localStorage.getItem(DEBUG_STORAGE_KEY);
+    if (storedDebug === null) {
+      debugToggle.checked = true;
+      localStorage.setItem(DEBUG_STORAGE_KEY, '1');
+    } else {
+      debugToggle.checked = storedDebug === '1';
+    }
     endpointDisplay.textContent = endpointSelect.value;
 
     endpointSelect.addEventListener('change', () => {
