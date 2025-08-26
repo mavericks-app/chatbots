@@ -97,6 +97,20 @@
           <option value="v1">v1: anonymous</option>
           <option value="v2">v2: user context</option>
         </select>
+        <input
+          id="idAgente"
+          type="number"
+          value="2"
+          placeholder="idagente"
+          class="hidden w-20 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none dark:bg-gray-700 dark:text-gray-100"
+        />
+        <input
+          id="idAgencia"
+          type="number"
+          value="413"
+          placeholder="idagencia"
+          class="hidden w-24 text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none dark:bg-gray-700 dark:text-gray-100"
+        />
         <a href="https://procesos.inmovilla.com/peticionesexternas/chatbot/n8n/list_vector_table.php" target="_blank" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5 text-sm">Gestionar memoria</a>
       </div>
     </header>
@@ -206,6 +220,8 @@
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
       const versionSelect = document.getElementById("versionSelect");
+      const idAgenteInput = document.getElementById("idAgente");
+      const idAgenciaInput = document.getElementById("idAgencia");
       const faqModal = document.getElementById("faqModal");
       const faqQuestion = document.getElementById("faqQuestion");
       const faqQuestionVoice = document.getElementById("faqQuestionVoice");
@@ -541,6 +557,10 @@ d.toLocaleTimeString("es-ES", {
         const urlencoded = new URLSearchParams();
         urlencoded.append("question", payload);
         urlencoded.append("user_key", userSelect.value);
+        if (versionSelect.value === "v2") {
+          urlencoded.append("idagente", idAgenteInput.value);
+          urlencoded.append("idagencia", idAgenciaInput.value);
+        }
 
         try {
           const response = await fetch(ENDPOINT_URL, {
@@ -617,6 +637,9 @@ d.toLocaleTimeString("es-ES", {
 
       versionSelect.addEventListener("change", () => {
         ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+        const showExtra = versionSelect.value === "v2";
+        idAgenteInput.classList.toggle("hidden", !showExtra);
+        idAgenciaInput.classList.toggle("hidden", !showExtra);
       });
 
       faqCancel.addEventListener("click", closeFaqModal);
@@ -660,6 +683,7 @@ d.toLocaleTimeString("es-ES", {
         v2Opt.textContent = "v2: user context";
         versionSelect.value = "v1";
         ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+        versionSelect.dispatchEvent(new Event("change"));
         ensureAtLeastOneUser();
         renderUserOptions();
         userSelect.value = loadUsers()[0].id;
