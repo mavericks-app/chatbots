@@ -92,6 +92,11 @@
         <select id="userSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none"></select>
         <button id="renameUser" title="Renombrar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">✏️</button>
         <button id="deleteUser" title="Eliminar" class="bg-white/20 hover:bg-white/30 rounded-lg p-1.5">🗑️</button>
+        <label for="environmentSelect" class="hidden sm:block text-sm text-white/80">Entorno:</label>
+        <select id="environmentSelect" class="header-select rounded-lg px-2 py-1 text-sm focus:outline-none">
+          <option value="pre">PREproducción</option>
+          <option value="pro">PROducción</option>
+        </select>
         <label for="versionSelect" class="hidden sm:block text-sm text-white/80">Versión:</label>
         <select id="versionSelect" class="header-select rounded-lg px-2 py-1 text-sm focus:outline-none">
           <option value="v1">v1: anonymous</option>
@@ -189,11 +194,19 @@
     <script src="voice.js"></script>
     <script>
       /******************** 1. ENDPOINTS ************************/
-      const ENDPOINTS = {
-        v1: "https://devtrf-n8n.dev.aws.id1cloud.net/webhook/v1/agente_faqs",
-        v2: "https://devtrf-n8n.dev.aws.id1cloud.net/webhook/v2/agente_faqs"
+      const API_ENDPOINTS = {
+        pre: {
+          v1: "https://devtrf-n8n.pre.aws.id1cloud.net/webhook/v1/agente_faqs",
+          v2: "https://devtrf-n8n.pre.aws.id1cloud.net/webhook/v2/agente_faqs",
+        },
+        pro: {
+          v1: "https://devtrf-n8n.pro.aws.id1cloud.net/webhook/v1/agente_faqs",
+          v2: "https://devtrf-n8n.pro.aws.id1cloud.net/webhook/v2/agente_faqs",
+        },
       };
-      let ENDPOINT_URL = ENDPOINTS.v1;
+      const ENV_KEY = "faqEnvironment";
+      let currentEnvironment = "pre";
+      let ENDPOINT_URL = API_ENDPOINTS[currentEnvironment].v1;
       // La llamada para guardar FAQs se realiza desde backend para evitar CORS
       const FAQ_SAVE_ENDPOINT = "/api/faq-entry";
 
@@ -219,6 +232,7 @@
       const renameBtn = document.getElementById("renameUser");
       const deleteBtn = document.getElementById("deleteUser");
       const themeToggle = document.getElementById("themeToggle");
+      const environmentSelect = document.getElementById("environmentSelect");
       const versionSelect = document.getElementById("versionSelect");
       const idAgenteInput = document.getElementById("idAgente");
       const idAgenciaInput = document.getElementById("idAgencia");
@@ -255,6 +269,10 @@
         localStorage.setItem(THEME_KEY, newTheme);
         applyTheme(newTheme);
       });
+
+      function updateEndpointUrl() {
+        ENDPOINT_URL = API_ENDPOINTS[currentEnvironment][versionSelect.value];
+      }
 
       /******************** 6. USERS CRUD ************************/
       function loadUsers() {
@@ -635,8 +653,14 @@ d.toLocaleTimeString("es-ES", {
         textarea.style.height = textarea.scrollHeight + "px";
       });
 
+      environmentSelect.addEventListener("change", () => {
+        currentEnvironment = environmentSelect.value;
+        localStorage.setItem(ENV_KEY, currentEnvironment);
+        updateEndpointUrl();
+      });
+
       versionSelect.addEventListener("change", () => {
-        ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+        updateEndpointUrl();
         const showExtra = versionSelect.value === "v2";
         idAgenteInput.classList.toggle("hidden", !showExtra);
         idAgenciaInput.classList.toggle("hidden", !showExtra);
@@ -681,8 +705,13 @@ d.toLocaleTimeString("es-ES", {
         initTheme();
         const v2Opt = versionSelect.querySelector("option[value=\"v2\"]");
         v2Opt.textContent = "v2: user context";
+        const storedEnvironment = localStorage.getItem(ENV_KEY);
+        if (storedEnvironment && API_ENDPOINTS[storedEnvironment]) {
+          currentEnvironment = storedEnvironment;
+        }
+        environmentSelect.value = currentEnvironment;
         versionSelect.value = "v1";
-        ENDPOINT_URL = ENDPOINTS[versionSelect.value];
+        updateEndpointUrl();
         versionSelect.dispatchEvent(new Event("change"));
         ensureAtLeastOneUser();
         renderUserOptions();
