@@ -106,6 +106,7 @@
     const copyParamsBtn = document.getElementById('copyParamsBtn');
     let modalContent = '';
     let modalType = '';
+    const JWT_INSTRUCTIONS_TEXT = 'Para obtener el JWT, accede al CRM, inicia sesión, abre el inspector de Chrome, ve a "Aplicación" y copia la cookie llamada "jwt".';
     attachVoiceInput(textarea, voiceBtn);
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
@@ -271,13 +272,17 @@
     async function sendMessage() {
       const text = textarea.value.trim();
       if (!text) return;
+      const token = tokenInput.value.trim();
+      if (!token) {
+        addMessage('⚠️ Debes introducir un JWT válido antes de enviar un mensaje. ' + JWT_INSTRUCTIONS_TEXT, 'bot');
+        return;
+      }
       textarea.value = '';
       textarea.style.height = 'auto';
       addMessage(text, 'user');
       addSpinner();
 
       const headers = { 'Content-Type': 'application/json' };
-      const token = tokenInput.value.trim();
       if (token) headers['Authorization'] = 'Bearer ' + token;
       const body = {
         fromUser: Number(fromUserInput.value),
@@ -296,9 +301,7 @@
         });
         if (resp.status === 401) {
           addMessage(
-            '⚠️ Error 401: el JWT es inválido o ha caducado. ' +
-              'En el CRM, inicia sesión, abre el inspector de Chrome, ve a "Aplicación" y ' +
-              'copia la cookie llamada "jwt" para obtener un nuevo token.',
+            '⚠️ Error 401: el JWT es inválido o ha caducado. ' + JWT_INSTRUCTIONS_TEXT,
             'bot'
           );
           return;
