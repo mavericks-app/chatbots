@@ -106,6 +106,7 @@
     const copyParamsBtn = document.getElementById('copyParamsBtn');
     let modalContent = '';
     let modalType = '';
+    const chatId = generateChatId();
     const JWT_INSTRUCTIONS_TEXT = 'Para obtener el JWT, accede al CRM, inicia sesión, abre el inspector de Chrome, ve a "Aplicación" y copia la cookie llamada "jwt".';
     attachVoiceInput(textarea, voiceBtn);
 
@@ -214,6 +215,16 @@
       }
     }
 
+    function generateChatId() {
+      if (typeof crypto !== 'undefined') {
+        if (crypto.randomUUID) return crypto.randomUUID();
+        const arr = new Uint8Array(16);
+        crypto.getRandomValues(arr);
+        return Array.from(arr, x => x.toString(16).padStart(2, '0')).join('');
+      }
+      return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
+
     function addMessage(text, from = 'user', query = null, json = null, error = null) {
       const bubble = document.createElement('div');
       const alignRight = from === 'user';
@@ -289,6 +300,7 @@
         toUser: 225130,
         agencyId: 6713,
         fromAgencyId: Number(fromAgencyInput.value),
+        chatId,
         message: text,
         mode: 'debug'
       };
