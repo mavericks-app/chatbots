@@ -42,6 +42,13 @@
         <span id="currentEndpoint" class="text-[10px] text-white/80 break-all mt-0.5"></span>
       </div>
       <div class="flex flex-col">
+        <label for="modelSelect" class="text-white/80 text-xs">Modelo IA</label>
+        <select id="modelSelect" class="text-gray-900 rounded-lg px-2 py-1 text-sm focus:outline-none">
+          <option value="claude">Claude</option>
+          <option value="gpt">GPT</option>
+        </select>
+      </div>
+      <div class="flex flex-col">
         <div class="flex items-center gap-1">
           <label for="tokenInput" class="text-white/80 text-xs">JWT Token</label>
           <span class="text-white/80 cursor-help" title="Para obtener el JWT, accede al CRM, inicia sesión, abre el inspector de Chrome, ve a Aplicación y copia la cookie llamada 'jwt'.">&#9432;</span>
@@ -89,9 +96,11 @@
   <script>
     const ENDPOINT_STORAGE_KEY = 'virtualEndpoint';
     const TOKEN_STORAGE_KEY = 'virtualToken';
+    const MODEL_STORAGE_KEY = 'virtualModelIA';
 
     const endpointSelect = document.getElementById('endpointSelect');
     const endpointDisplay = document.getElementById('currentEndpoint');
+    const modelSelect = document.getElementById('modelSelect');
     const tokenInput = document.getElementById('tokenInput');
     const userSelect = document.getElementById('userSelect');
     const fromUserInput = document.getElementById('fromUserInput');
@@ -111,12 +120,17 @@
     attachVoiceInput(textarea, voiceBtn);
 
     endpointSelect.value = localStorage.getItem(ENDPOINT_STORAGE_KEY) || endpointSelect.value;
+    modelSelect.value = localStorage.getItem(MODEL_STORAGE_KEY) || 'claude';
     tokenInput.value = localStorage.getItem(TOKEN_STORAGE_KEY) || '';
     endpointDisplay.textContent = endpointSelect.value;
 
     endpointSelect.addEventListener('change', () => {
       localStorage.setItem(ENDPOINT_STORAGE_KEY, endpointSelect.value);
       endpointDisplay.textContent = endpointSelect.value;
+    });
+
+    modelSelect.addEventListener('change', () => {
+      localStorage.setItem(MODEL_STORAGE_KEY, modelSelect.value);
     });
 
     // Redefinir la función para obtener el endpoint real
@@ -303,7 +317,8 @@
         fromAgencyId: Number(fromAgencyInput.value),
         chatId,
         message: text,
-        mode: 'debug'
+        mode: 'debug',
+        modelIA: modelSelect.value || 'claude'
       };
 
       try {
